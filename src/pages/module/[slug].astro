@@ -1,0 +1,155 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Timer from '../../components/Timer.astro';
+import VoiceOver from '../../components/VoiceOver.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const modules = await getCollection('modules');
+  return modules.map((module) => ({
+    params: { slug: module.id },
+    props: { module },
+  }));
+}
+
+const { module } = Astro.props;
+const { data, body } = module;
+
+const totalSeconds = parseInt(data.duration) * 60;
+
+const sequence = body.split('## ').filter(Boolean).map((block) => {
+  const lines = block.trim().split('\n');
+  const title = lines[0].replace('## ', '').trim();
+  const durationLine = lines.find((l) => l.startsWith('**Duration:**'));
+  const duration = durationLine?.replace('**Duration:**', '').trim() || '';
+  const instructions = lines.filter((l) => !l.startsWith('**Duration:**') && !l.startsWith('##')).join(' ').trim();
+  return { title, duration, instructions };
+}).filter((s) => !s.title.includes('Voice-Over Script'));
+
+const voiceOver = body.split('## Voice-Over Script')[1]?.trim() || '';
+
+function parseStepDuration(dur) {
+  const minMatch = dur.match(/(\d+)\s*min/);
+  const secMatch = dur.match(/(\d+)\s*sec/);
+  if (minMatch) return parseInt(minMatch[1]) * 60;
+  if (secMatch) return parseInt(secMatch[1]);
+  return 30;
+}
+
+const timerSteps = sequence.map((s) => ({
+  title: s.title,
+  durationSeconds: parseStepDuration(s.duration),
+}));
+---
+
+<Layout title={data.seo.meta_title} description={data.seo.meta_description} canonical={`https://yogainamin.com/module/${module.id}/`}>
+  <Header showNav={false} />
+
+  <main class="px-6 py-12 md:py-20" style="background: var(--color-canvas-soft);">
+    <div class="mx-auto max-w-[900px]">
+      <a href="/#practices" class="mb-6 inline-flex items-center gap-1 text-sm font-medium no-underline transition-colors hover:opacity-60" style="color: var(--color-body);">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Practices
+      </a>
+
+      <div class="mb-4 flex items-center gap-3">
+        <span class="inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas); color: var(--color-body);">{data.duration}</span>
+        <span class="inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas); color: var(--color-body);">{data.difficulty}</span>
+        {data.equipment !== 'None' && (
+          <span class="inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas); color: var(--color-body);">{data.equipment}</span>
+        )}
+      </div>
+
+      <h1 class="text-3xl font-semibold leading-tight tracking-tight md:text-4xl" style="color: var(--color-ink); letter-spacing: -1.28px;">{data.title}</h1>
+      <p class="mt-3 text-lg leading-relaxed" style="color: var(--color-body);">{data.seo.meta_description}</p>
+
+      <div class="mt-8" style="max-width: 500px;">
+        <Timer totalSeconds={totalSeconds} moduleTitle={data.title} steps={timerSteps} />
+      </div>
+
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "name": data.title,
+          "description": data.seo.meta_description,
+          "totalTime": `PT${parseInt(data.duration)}M`,
+          "step": sequence.map((step, i) => ({
+            "@type": "HowToStep",
+            "position": i + 1,
+            "name": step.title,
+            "text": step.instructions,
+            "duration": step.duration.includes('min') ? `PT${step.duration.match(/\d+/)?.[0] || 1}M` : `PT${step.duration.match(/\d+/)?.[0] || 30}S`,
+            "image": `https://yogainamin.com/og-${module.id}.png`
+          }))
+        }, null, 2)}
+      </script>
+
+      <div class="mt-12">
+        <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Sequence — Quick Yoga Stretches Step by Step</h2>
+        <div class="mt-4 flex flex-col gap-4">
+          {sequence.map((step, i) => (
+            <div class="rounded-lg border p-5" data-step-index={i} style="border-color: var(--color-hairline); background: var(--color-canvas);">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">{i + 1}</span>
+                  <div>
+                    <h3 class="text-base font-semibold" style="color: var(--color-ink);">{step.title}</h3>
+                    <span class="text-sm font-medium" style="color: var(--color-mute); font-family: var(--font-mono);">{step.duration}</span>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-sm leading-relaxed" style="color: var(--color-body);">{step.instructions}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-10">
+        <VoiceOver script={voiceOver} moduleTitle={data.title} />
+      </div>
+
+      <div class="mt-10">
+        <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Benefits</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas);">
+            <h3 class="mb-2 text-sm font-semibold" style="color: var(--color-ink);">Physiological</h3>
+            <ul class="flex flex-col gap-1.5">
+              {data.benefits.physiological.map((b) => (
+                <li class="flex items-start gap-2 text-sm" style="color: var(--color-body);">
+                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-success);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas);">
+            <h3 class="mb-2 text-sm font-semibold" style="color: var(--color-ink);">Mental</h3>
+            <ul class="flex flex-col gap-1.5">
+              {data.benefits.mental.map((b) => (
+                <li class="flex items-start gap-2 text-sm" style="color: var(--color-body);">
+                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-violet);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  {b}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4 rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+          <div class="mb-1 text-xs font-medium uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">The Science</div>
+          <p class="text-sm leading-relaxed" style="color: var(--color-body);">{data.benefits.science}</p>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-2">
+        {data.tags.map((tag) => (
+          <span class="rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas-soft-2); color: var(--color-mute); font-family: var(--font-mono);">{tag}</span>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

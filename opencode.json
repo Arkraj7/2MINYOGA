@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "Astro docs": {
+      "type": "remote",
+      "url": "https://mcp.docs.astro.build/mcp",
+      "enabled": true
+    }
+  },
+  "skills": {
+    "web-design-guidelines": {
+      "source": "https://github.com/vercel-labs/agent-skills",
+      "skill": "web-design-guidelines",
+      "enabled": true
+    },
+    "tailwind-4-docs": {
+      "source": "https://github.com/lombiq/tailwind-agent-skills",
+      "skill": "tailwind-4-docs",
+      "enabled": true
+    }
+  }
+}

@@ -1,0 +1,52 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="About Us | Yoga in a Min — Bite-Sized Yoga for Busy Lives" description="Learn about the mission behind Yoga in a Min: helping busy professionals and students find rapid calm with science-backed 2-minute yoga routines." canonical="https://yogainamin.com/about/">
+  <Header />
+  <main>
+    <section class="px-6 py-24" style="background: var(--color-canvas);">
+      <div class="mx-auto max-w-[700px]">
+        <span class="mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider" style="background: var(--color-canvas-soft); color: var(--color-body); font-family: var(--font-mono);">About Us</span>
+        <h1 class="text-3xl font-semibold leading-tight tracking-tight md:text-4xl" style="color: var(--color-ink); letter-spacing: -1.92px;">Our Mission</h1>
+        <p class="mt-4 text-lg leading-relaxed" style="color: var(--color-body);">
+          Stress doesn't wait for a convenient time. Neither should your relief.
+        </p>
+        <p class="mt-4 leading-relaxed" style="color: var(--color-body);">
+          Yoga in a Min was built for the modern professional, student, and busy parent who needs stress relief now — not after a 60-minute class. Every routine on this site takes 2 to 5 minutes, requires no special equipment, and is grounded in exercise physiology and nervous system science.
+        </p>
+        <p class="mt-4 leading-relaxed" style="color: var(--color-body);">
+          We believe that consistency — not duration — is the real driver of health outcomes. A two-minute practice you actually do is infinitely more valuable than an hour-long practice you skip.
+        </p>
+        <h2 class="mt-12 text-2xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -0.96px;">Who We Serve</h2>
+        <ul class="mt-4 flex flex-col gap-3" style="color: var(--color-body);">
+          <li class="flex items-start gap-3 leading-relaxed"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--color-ink);"></span><strong>Desk workers</strong> — neck, shoulder, and wrist relief without leaving your chair</li>
+          <li class="flex items-start gap-3 leading-relaxed"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--color-ink);"></span><strong>College students</strong> — exam stress and anxiety reset between study sessions</li>
+          <li class="flex items-start gap-3 leading-relaxed"><span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full" style="background: var(--color-ink);"></span><strong>Anyone new to yoga</strong> — zero experience required, no mats needed</li>
+        </ul>
+        <h2 class="mt-12 text-2xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -0.96px;">Our Values</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+            <h3 class="text-base font-semibold" style="color: var(--color-ink);">Science First</h3>
+            <p class="mt-2 text-sm leading-relaxed" style="color: var(--color-body);">Every routine is designed around HRV, vagus nerve activation, and parasympathetic nervous system principles.</p>
+          </div>
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+            <h3 class="text-base font-semibold" style="color: var(--color-ink);">Zero Barriers</h3>
+            <p class="mt-2 text-sm leading-relaxed" style="color: var(--color-body);">No mat, no special clothes, no prior experience. Just you, your breath, and 2–5 minutes.</p>
+          </div>
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+            <h3 class="text-base font-semibold" style="color: var(--color-ink);">Consistency Over Intensity</h3>
+            <p class="mt-2 text-sm leading-relaxed" style="color: var(--color-body);">Small daily practices outperform sporadic marathons. We make it easy to build a sustainable habit.</p>
+          </div>
+          <div class="rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+            <h3 class="text-base font-semibold" style="color: var(--color-ink);">Free for Everyone</h3>
+            <p class="mt-2 text-sm leading-relaxed" style="color: var(--color-body);">Stress relief shouldn't require a subscription. All our routines are free, always.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

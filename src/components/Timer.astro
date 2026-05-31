@@ -1,0 +1,242 @@
+---
+export interface Step {
+  title: string;
+  durationSeconds: number;
+}
+
+export interface Props {
+  totalSeconds: number;
+  moduleTitle: string;
+  steps?: Step[];
+}
+
+const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
+---
+
+<script type="application/json" id="timer-steps-data" set:html={JSON.stringify(steps)}></script>
+
+<div
+  id="timer-root"
+  data-total={totalSeconds}
+  class="overflow-hidden rounded-lg border"
+  style="border-color: var(--color-hairline); background: var(--color-canvas);"
+>
+  <div class="p-6 text-center">
+    <div id="timer-display" class="font-mono text-5xl font-medium tracking-tight" style="color: var(--color-ink);">
+      {Math.floor(totalSeconds / 60)}:{(totalSeconds % 60).toString().padStart(2, '0')}
+    </div>
+    <p class="mt-2 text-sm" style="color: var(--color-mute);">{moduleTitle}</p>
+
+    <div id="step-indicator" class="mt-4 border-t pt-4" style="border-color: var(--color-hairline); display: none;">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">Current Pose</span>
+        <span id="step-timer" class="font-mono text-lg font-medium" style="color: var(--color-ink);">0:00</span>
+      </div>
+      <p id="step-name" class="mt-1 text-sm font-semibold" style="color: var(--color-ink);"></p>
+    </div>
+
+    <div class="mt-6 flex items-center justify-center gap-4">
+      <button id="timer-start" class="cursor-pointer rounded-full px-6 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90" style="background: var(--color-ink);">Start</button>
+      <button id="timer-pause" class="hidden cursor-pointer rounded-full border px-6 py-2 text-sm font-medium transition-opacity hover:opacity-60" style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">Pause</button>
+      <button id="timer-reset" class="cursor-pointer rounded-full border px-6 py-2 text-sm font-medium transition-opacity hover:opacity-60" style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">Reset</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  class Timer {
+    constructor(totalSeconds, displayEl, startBtn, pauseBtn, resetBtn, steps, stepIndicator, stepNameEl, stepTimerEl) {
+      this.totalSeconds = totalSeconds;
+      this.remaining = totalSeconds;
+      this.displayEl = displayEl;
+      this.startBtn = startBtn;
+      this.pauseBtn = pauseBtn;
+      this.resetBtn = resetBtn;
+      this.steps = steps || [];
+      this.stepIndicator = stepIndicator;
+      this.stepNameEl = stepNameEl;
+      this.stepTimerEl = stepTimerEl;
+      this.interval = null;
+      this.running = false;
+      this.startTime = 0;
+      this.elapsedBeforePause = 0;
+      this.currentStepIndex = -1;
+    }
+
+    format(seconds) {
+      const m = Math.floor(Math.max(0, seconds) / 60);
+      const s = Math.floor(Math.max(0, seconds) % 60);
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    updateDisplay() {
+      this.displayEl.textContent = this.format(this.remaining);
+    }
+
+    getElapsed() {
+      if (this.running) {
+        return this.elapsedBeforePause + (Date.now() - this.startTime) / 1000;
+      }
+      return this.elapsedBeforePause;
+    }
+
+    getCurrentStep(elapsed) {
+      let accumulated = 0;
+      for (let i = 0; i < this.steps.length; i++) {
+        accumulated += this.steps[i].durationSeconds;
+        if (elapsed < accumulated || i === this.steps.length - 1) {
+          const prevAccum = accumulated - this.steps[i].durationSeconds;
+          const stepElapsed = elapsed - prevAccum;
+          return {
+            index: i,
+            remaining: Math.max(0, this.steps[i].durationSeconds - stepElapsed),
+          };
+        }
+      }
+      return { index: this.steps.length - 1, remaining: 0 };
+    }
+
+    updateStepDisplay(index, remaining) {
+      if (!this.stepNameEl || !this.stepTimerEl || index >= this.steps.length) return;
+
+      this.currentStepIndex = index;
+      this.stepNameEl.textContent = this.steps[index].title;
+      this.stepTimerEl.textContent = this.format(remaining);
+      this.stepIndicator.style.display = 'block';
+
+      document.querySelectorAll('[data-step-index]').forEach((el) => {
+        const idx = parseInt(el.dataset.stepIndex, 10);
+        if (idx === index) {
+          el.style.borderColor = 'var(--color-ink)';
+          el.style.borderWidth = '2px';
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          el.style.borderColor = 'var(--color-hairline)';
+          el.style.borderWidth = '1px';
+        }
+      });
+    }
+
+    tick() {
+      const elapsed = this.getElapsed();
+      const newRemaining = Math.max(0, this.totalSeconds - Math.floor(elapsed));
+
+      if (newRemaining !== this.remaining) {
+        this.remaining = newRemaining;
+        this.updateDisplay();
+      }
+
+      if (this.steps.length > 0) {
+        const step = this.getCurrentStep(elapsed);
+        this.updateStepDisplay(step.index, step.remaining);
+      }
+
+      if (this.remaining <= 0) {
+        this.complete();
+      }
+    }
+
+    start() {
+      if (this.running) return;
+      this.running = true;
+      this.startTime = Date.now();
+      this.startBtn.classList.add('hidden');
+      this.pauseBtn.classList.remove('hidden');
+      this.tick();
+      this.interval = setInterval(() => this.tick(), 200);
+    }
+
+    stop() {
+      if (this.running) {
+        this.elapsedBeforePause = this.getElapsed();
+      }
+      this.running = false;
+      clearInterval(this.interval);
+      this.interval = null;
+      this.startBtn.classList.remove('hidden');
+      this.pauseBtn.classList.add('hidden');
+    }
+
+    reset() {
+      this.stop();
+      this.elapsedBeforePause = 0;
+      this.remaining = this.totalSeconds;
+      this.currentStepIndex = -1;
+      this.updateDisplay();
+      if (this.stepIndicator) this.stepIndicator.style.display = 'none';
+      if (this.stepTimerEl) this.stepTimerEl.textContent = '0:00';
+      if (this.stepNameEl) this.stepNameEl.textContent = '';
+      document.querySelectorAll('[data-step-index]').forEach((el) => {
+        el.style.borderColor = 'var(--color-hairline)';
+        el.style.borderWidth = '1px';
+      });
+    }
+
+    complete() {
+      this.running = false;
+      clearInterval(this.interval);
+      this.interval = null;
+      this.startBtn.classList.remove('hidden');
+      this.pauseBtn.classList.add('hidden');
+      this.displayEl.textContent = '0:00';
+      this.playBeep();
+      if (this.stepNameEl) this.stepNameEl.textContent = 'Practice Complete!';
+      if (this.stepTimerEl) this.stepTimerEl.textContent = '0:00';
+      if (this.stepIndicator) this.stepIndicator.style.display = 'block';
+      document.querySelectorAll('[data-step-index]').forEach((el) => {
+        el.style.borderColor = 'var(--color-hairline)';
+        el.style.borderWidth = '1px';
+      });
+    }
+
+    playBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 660;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } catch (e) {}
+    }
+  }
+
+  const root = document.getElementById('timer-root');
+  if (root) {
+    const total = parseInt(root.dataset.total, 10);
+    let steps = [];
+    try {
+      const stepsData = document.getElementById('timer-steps-data');
+      if (stepsData) steps = JSON.parse(stepsData.textContent || '[]');
+    } catch (e) {}
+
+    const timer = new Timer(
+      total,
+      document.getElementById('timer-display'),
+      document.getElementById('timer-start'),
+      document.getElementById('timer-pause'),
+      document.getElementById('timer-reset'),
+      steps,
+      document.getElementById('step-indicator'),
+      document.getElementById('step-name'),
+      document.getElementById('step-timer')
+    );
+    timer.updateDisplay();
+
+    document.getElementById('timer-start').addEventListener('click', () => timer.start());
+    document.getElementById('timer-pause').addEventListener('click', () => timer.stop());
+    document.getElementById('timer-reset').addEventListener('click', () => timer.reset());
+
+    root.addEventListener('vo:play', () => {
+      if (!timer.running) timer.start();
+    });
+    root.addEventListener('vo:pause', () => timer.stop());
+    root.addEventListener('vo:stop', () => timer.stop());
+  }
+</script>

@@ -1,0 +1,160 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const modules = await getCollection('modules');
+const faqs = await getCollection('faqs');
+
+const sortedModules = modules.sort((a, b) => {
+  const order = ['desk-reset-neck-tension', 'heart-coherence-breathing', 'wrist-eye-relief', 'seated-spinal-twist', 'vagus-nerve-activation', 'standing-energy-reset', 'alternate-nostril-breathing', 'lower-back-hip-release'];
+  return order.indexOf(a.id) - order.indexOf(b.id);
+});
+
+const sortedFaqs = faqs.sort((a, b) => {
+  const order = ['hrv-breathing-benefits', 'cortisol-reduction', 'desk-yoga-effectiveness', 'vagus-nerve-stimulation', 'best-time-practice', 'no-yoga-experience'];
+  return order.indexOf(a.id) - order.indexOf(b.id);
+});
+
+const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
+---
+
+<Layout title="Quick Yoga Stress Relief | 2-Minute Bite-Sized Routines" description="Need quick yoga stress relief? Discover 2-to-5-minute bite-sized yoga routines and quick stretches perfect for the office, school, or home. Start relaxing now." canonical="https://yogainamin.com/">
+  <Header />
+  <main>
+    <section class="relative overflow-hidden px-6 py-24 text-center md:py-32" style="background: var(--color-canvas);">
+      <div class="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style="background: linear-gradient(135deg, #007cf0, #00dfd8, #7928ca, #ff0080, #ff4d4d, #f9cb28);"></div>
+      <div class="mx-auto max-w-[800px]">
+        <span class="mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider" style="background: var(--color-canvas-soft); color: var(--color-body); font-family: var(--font-mono);">Bite-Sized Yoga for Stress Relief</span>
+        <h1 class="text-4xl font-semibold leading-tight tracking-tight md:text-5xl" style="color: var(--color-ink); letter-spacing: -2.4px;">
+          Quick Yoga Stress Relief<br class="md:hidden" /> <span style="background: linear-gradient(135deg, #007cf0, #7928ca); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">in 5 Minutes or Less</span>
+        </h1>
+        <p class="mx-auto mt-4 max-w-[600px] text-lg leading-relaxed" style="color: var(--color-body);">
+          Science-backed 2-minute yoga and quick yoga stretches designed for busy professionals, college students, and anyone needing fast tension relief at their desk. No mat needed. No experience required.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="#practices" class="inline-flex cursor-pointer items-center rounded-full px-6 py-3 text-base font-medium text-white no-underline transition-opacity hover:opacity-90" style="background: var(--color-ink);">Explore Practices</a>
+          <a href="#faqs" class="inline-flex cursor-pointer items-center rounded-full border px-6 py-3 text-base font-medium no-underline transition-opacity hover:opacity-60" style="border-color: var(--color-hairline); color: var(--color-ink); background: var(--color-canvas);">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="practices" class="px-6 py-24" style="background: var(--color-canvas-soft);">
+      <div class="mx-auto max-w-[1400px]">
+        <div class="mb-12 text-center">
+          <h2 class="text-3xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -1.28px;">Bite-Sized Yoga Routines for Busy Professionals</h2>
+          <p class="mx-auto mt-3 max-w-[500px]" style="color: var(--color-body);">Each micro yoga session is 2–5 minutes, designed to fit seamlessly into your workday. Quick yoga stretches for instant calm and tension relief.</p>
+        </div>
+
+        <div class="mb-8 flex flex-wrap items-center justify-center gap-2">
+          <button class="tag-filter active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag="all" style="background: var(--color-ink); color: white;">All</button>
+          {allTags.map((tag) => (
+            <button class="tag-filter rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag={tag} style="border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">{tag}</button>
+          ))}
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {sortedModules.map((module) => {
+            const { data } = module;
+            const totalSeconds = parseInt(data.duration) * 60;
+            return (
+              <a href={`/module/${module.id}`} data-module-tag={data.tags.join(',')} class="group relative overflow-hidden rounded-lg border no-underline transition-all duration-200 hover:-translate-y-0.5" style="border-color: var(--color-hairline); background: var(--color-canvas); box-shadow: 0px 1px 1px rgba(0,0,0,0.03), 0px 2px 2px rgba(0,0,0,0.04);">
+                <div class="p-5">
+                  <div class="mb-3 flex items-center gap-2">
+                    <span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium" style="background: var(--color-canvas-soft); color: var(--color-body);">{data.duration}</span>
+                    <span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium" style="background: var(--color-canvas-soft); color: var(--color-body);">{data.difficulty}</span>
+                  </div>
+                  <h3 class="text-base font-semibold leading-snug tracking-tight transition-colors group-hover:opacity-70" style="color: var(--color-ink);">{data.title}</h3>
+                  <p class="mt-2 line-clamp-2 text-sm leading-relaxed" style="color: var(--color-mute);">{data.seo.meta_description}</p>
+                  <div class="mt-4 flex flex-wrap gap-1.5">
+                    {data.tags.slice(0, 3).map((tag) => (
+                      <span class="rounded-full px-2 py-0.5 text-[11px] font-medium" style="background: var(--color-canvas-soft-2); color: var(--color-mute); font-family: var(--font-mono);">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="px-6 py-24" style="background: var(--color-canvas);">
+      <div class="mx-auto max-w-[800px]">
+        <h2 class="mb-8 text-2xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -0.96px;">How a 2-Minute Yoga Session Can Lower Stress</h2>
+        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Quick yoga stress relief works by activating your parasympathetic nervous system through gentle movement and focused breathing. These micro yoga sessions are designed to interrupt the stress cycle before it compounds. Research shows that even <strong>2 minute yoga</strong> breaks can reduce cortisol by up to 25%, making <strong>bite-sized yoga</strong> one of the most efficient <strong>yoga stress management</strong> tools available.</p>
+
+        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Why Bite-Sized Yoga Works Better for Busy Schedules</h3>
+        <p class="mb-4 leading-relaxed" style="color: var(--color-body);">Traditional yoga requires 60 minutes and a studio. <strong>Quick yoga workouts</strong> remove every barrier. You can practice <strong>office desk yoga</strong> in your chair, <strong>fast yoga routines</strong> between meetings, and <strong>quick tension relief</strong> stretches without changing clothes. Consistency beats duration every time.</p>
+
+        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Quick Yoga Stretches for the Office Desk</h3>
+        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Our <strong>office yoga stretches</strong> target the neck, shoulders, wrists, and lower back — the areas most affected by prolonged sitting. Each <strong>fast yoga routine</strong> is designed for your desk chair and requires no equipment. Perfect for <strong>corporate yoga breaks</strong> and <strong>home office yoga stretches</strong>.</p>
+
+        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Meditation Yoga Stress Relief for College Students</h3>
+        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Exam stress and academic pressure demand <strong>rapid anxiety relief stretches</strong> that fit between classes. Our <strong>short yoga for beginners</strong> sequences include calming breathing techniques for <strong>nervous system reset yoga</strong> and <strong>meditation yoga stress relief</strong> — all under 5 minutes.</p>
+      </div>
+    </section>
+
+    <section id="faqs" class="px-6 py-24" style="background: var(--color-canvas);">
+      <div class="mx-auto max-w-[800px]">
+        <div class="mb-12 text-center">
+          <h2 class="text-3xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -1.28px;">Frequently Asked Questions</h2>
+          <p class="mx-auto mt-3 max-w-[500px]" style="color: var(--color-body);">Everything you need to know about bite-sized yoga, quick yoga stress relief, and micro yoga sessions.</p>
+        </div>
+
+        <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {sortedFaqs.map((faq) => `{
+                "@type": "Question",
+                "name": ${JSON.stringify(faq.data.question)},
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": ${JSON.stringify(faq.data.answer)}
+                }
+              }`).join(',\n              ')}
+            ]
+          }
+        </script>
+
+        <div class="flex flex-col gap-3">
+          {sortedFaqs.map((faq) => (
+            <details class="group overflow-hidden rounded-lg border transition-all" style="border-color: var(--color-hairline); background: var(--color-canvas-soft);">
+              <summary class="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-medium transition-colors hover:opacity-80" style="color: var(--color-ink);">
+                {faq.data.question}
+                <svg class="h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="border-t px-5 py-4" style="border-color: var(--color-hairline);">
+                <p class="text-sm leading-relaxed" style="color: var(--color-body);">{faq.data.answer}</p>
+                <span class="mt-2 inline-block text-xs font-medium uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">{faq.data.category}</span>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.querySelectorAll('.tag-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tag-filter').forEach((b) => {
+        b.style.background = b.dataset.tag === 'all' ? 'var(--color-ink)' : 'var(--color-canvas)';
+        b.style.color = b.dataset.tag === 'all' ? 'white' : 'var(--color-body)';
+        b.style.border = b.dataset.tag === 'all' ? 'none' : '1px solid var(--color-hairline)';
+      });
+      btn.style.background = 'var(--color-ink)';
+      btn.style.color = 'white';
+      btn.style.border = 'none';
+      const tag = btn.dataset.tag;
+      document.querySelectorAll('[data-module-tag]').forEach((card) => {
+        card.style.display = tag === 'all' || card.dataset.moduleTag.split(',').includes(tag) ? '' : 'none';
+      });
+    });
+  });
+</script>
