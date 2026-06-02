@@ -1,0 +1,58 @@
+---
+---
+
+<div
+  id="cookie-consent"
+  class="fixed bottom-4 left-4 right-4 z-50 mx-auto hidden max-w-[640px] rounded-lg border p-4 text-sm leading-relaxed"
+  style="background: var(--color-canvas); border-color: var(--color-hairline); box-shadow: 0 10px 30px rgba(0,0,0,0.12); color: var(--color-body);"
+  role="region"
+  aria-label="Cookie consent notice"
+>
+  <p class="mb-2 font-semibold" style="color: var(--color-ink);">Cookies & analytics</p>
+  <p class="mb-3">
+    This site uses Google Analytics cookies (only after you accept) and stores your theme preference.
+    See our <a href="/privacy" class="underline" style="color: var(--color-link);">privacy policy</a> for details.
+  </p>
+  <div class="flex flex-wrap gap-2">
+    <button
+      type="button"
+      id="cookie-accept"
+      class="cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+      style="background: var(--color-ink);"
+    >Accept</button>
+    <button
+      type="button"
+      id="cookie-decline"
+      class="cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-opacity hover:opacity-60"
+      style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);"
+    >Decline</button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    try {
+      var stored = localStorage.getItem('cookie-consent');
+      var banner = document.getElementById('cookie-consent');
+      if (!banner) return;
+      if (stored === 'accepted' || stored === 'declined') return;
+      banner.classList.remove('hidden');
+
+      function respond(choice) {
+        try { localStorage.setItem('cookie-consent', choice); } catch (e) {}
+        banner.classList.add('hidden');
+        if (choice === 'accepted' && typeof window.gtag === 'function') {
+          window.gtag('consent', 'update', {
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted',
+            analytics_storage: 'granted'
+          });
+        }
+      }
+
+      document.getElementById('cookie-accept')?.addEventListener('click', function () { respond('accepted'); });
+      document.getElementById('cookie-decline')?.addEventListener('click', function () { respond('declined'); });
+    } catch (e) {}
+  })();
+</script>

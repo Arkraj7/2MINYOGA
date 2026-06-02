@@ -22,7 +22,14 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
   style="border-color: var(--color-hairline); background: var(--color-canvas);"
 >
   <div class="p-6 text-center">
-    <div id="timer-display" class="font-mono text-5xl font-medium tracking-tight" style="color: var(--color-ink);">
+    <div
+      id="timer-display"
+      role="timer"
+      aria-live="off"
+      aria-atomic="true"
+      class="font-mono text-5xl font-medium tracking-tight"
+      style="color: var(--color-ink);"
+    >
       {Math.floor(totalSeconds / 60)}:{(totalSeconds % 60).toString().padStart(2, '0')}
     </div>
     <p class="mt-2 text-sm" style="color: var(--color-mute);">{moduleTitle}</p>
@@ -30,9 +37,22 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
     <div id="step-indicator" class="mt-4 border-t pt-4" style="border-color: var(--color-hairline); display: none;">
       <div class="flex items-center justify-between">
         <span class="text-xs font-medium uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">Current Pose</span>
-        <span id="step-timer" class="font-mono text-lg font-medium" style="color: var(--color-ink);">0:00</span>
+        <span
+          id="step-timer"
+          role="timer"
+          aria-live="polite"
+          aria-atomic="true"
+          class="font-mono text-lg font-medium"
+          style="color: var(--color-ink);"
+        >0:00</span>
       </div>
-      <p id="step-name" class="mt-1 text-sm font-semibold" style="color: var(--color-ink);"></p>
+      <p
+        id="step-name"
+        aria-live="polite"
+        aria-atomic="true"
+        class="mt-1 text-sm font-semibold"
+        style="color: var(--color-ink);"
+      ></p>
     </div>
 
     <div class="mt-6 flex items-center justify-center gap-4">
@@ -62,6 +82,7 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
       this.startTime = 0;
       this.elapsedBeforePause = 0;
       this.currentStepIndex = -1;
+      this._hasStarted = false;
     }
 
     format(seconds) {
@@ -100,17 +121,23 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
     updateStepDisplay(index, remaining) {
       if (!this.stepNameEl || !this.stepTimerEl || index >= this.steps.length) return;
 
+      const changed = index !== this.currentStepIndex;
       this.currentStepIndex = index;
       this.stepNameEl.textContent = this.steps[index].title;
       this.stepTimerEl.textContent = this.format(remaining);
       this.stepIndicator.style.display = 'block';
+
+      if (changed) {
+        document.dispatchEvent(new CustomEvent('timer:step-change', {
+          detail: { index }
+        }));
+      }
 
       document.querySelectorAll('[data-step-index]').forEach((el) => {
         const idx = parseInt(el.dataset.stepIndex, 10);
         if (idx === index) {
           el.style.borderColor = 'var(--color-ink)';
           el.style.borderWidth = '2px';
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
           el.style.borderColor = 'var(--color-hairline)';
           el.style.borderWidth = '1px';
@@ -139,10 +166,19 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
 
     start() {
       if (this.running) return;
+      const isResume = this._hasStarted && this.elapsedBeforePause > 0;
+      this._hasStarted = true;
       this.running = true;
       this.startTime = Date.now();
       this.startBtn.classList.add('hidden');
       this.pauseBtn.classList.remove('hidden');
+      if (isResume) {
+        document.dispatchEvent(new CustomEvent('timer:resumed'));
+      } else {
+        document.dispatchEvent(new CustomEvent('timer:started', {
+          detail: { totalSteps: this.steps.length }
+        }));
+      }
       this.tick();
       this.interval = setInterval(() => this.tick(), 200);
     }
@@ -156,6 +192,7 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
       this.interval = null;
       this.startBtn.classList.remove('hidden');
       this.pauseBtn.classList.add('hidden');
+      document.dispatchEvent(new CustomEvent('timer:paused'));
     }
 
     reset() {
@@ -163,6 +200,7 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
       this.elapsedBeforePause = 0;
       this.remaining = this.totalSeconds;
       this.currentStepIndex = -1;
+      this._hasStarted = false;
       this.updateDisplay();
       if (this.stepIndicator) this.stepIndicator.style.display = 'none';
       if (this.stepTimerEl) this.stepTimerEl.textContent = '0:00';
@@ -171,6 +209,7 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
         el.style.borderColor = 'var(--color-hairline)';
         el.style.borderWidth = '1px';
       });
+      document.dispatchEvent(new CustomEvent('timer:stopped'));
     }
 
     complete() {
@@ -188,6 +227,7 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
         el.style.borderColor = 'var(--color-hairline)';
         el.style.borderWidth = '1px';
       });
+      document.dispatchEvent(new CustomEvent('timer:complete'));
     }
 
     playBeep() {
@@ -237,6 +277,6 @@ const { totalSeconds, moduleTitle, steps = [] } = Astro.props;
       if (!timer.running) timer.start();
     });
     root.addEventListener('vo:pause', () => timer.stop());
-    root.addEventListener('vo:stop', () => timer.stop());
+    root.addEventListener('vo:stop', () => timer.reset());
   }
 </script>

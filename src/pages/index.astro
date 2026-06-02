@@ -68,7 +68,7 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
           <a href="#practices" class="btn-gradient"><strong class="btn-gradient__label">Explore Practices</strong><div class="btn-gradient__stars"><div class="btn-gradient__stars-inner"></div></div><div class="btn-gradient__glow"><div class="btn-gradient__circle"></div><div class="btn-gradient__circle"></div></div></a>
           <a href="#faqs" class="btn-3d"><span class="btn-3d__top">Learn More</span></a>
         </div>
-        <img src="/HERO_YOGA.webp" alt="Yoga poses illustration" class="mx-auto mt-3 block h-auto w-full max-w-[220px]" />
+        <img src="/HERO_YOGA.webp" alt="Yoga poses illustration" width="220" height="220" decoding="async" class="mx-auto mt-3 block h-auto w-full max-w-[220px]" />
       </div>
     </section>
 
@@ -106,7 +106,7 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
 
         <div class="mb-8 flex flex-col items-center gap-2">
           <div class="flex flex-wrap items-center justify-center gap-2">
-            <button class="tag-filter active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag="all" aria-pressed="true" style="background: var(--color-ink); color: white;">All</button>
+            <button class="tag-filter is-active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag="all" aria-pressed="true">All</button>
             <div id="tag-container" class="flex flex-wrap items-center justify-center gap-2">
               {allTags.map((tag) => (
                 <button class="tag-filter rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag={tag} aria-pressed="false" style="border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">{tag}</button>
@@ -134,7 +134,7 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
               >
                 {moduleImageMap[module.id] && (
                   <div class="aspect-[4/3] overflow-hidden bg-teal-50/60 dark:bg-teal-950/30">
-                    <img src={`/images/poses/${moduleImageMap[module.id]}.webp`} alt={data.title} class="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                    <img src={`/images/poses/${moduleImageMap[module.id]}.webp`} alt={data.title} width="400" height="300" decoding="async" class="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105" loading="lazy" />
                   </div>
                 )}
                 <div class="p-5">
@@ -283,6 +283,20 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
     opacity: 1;
     transform: translateY(0);
   }
+  .tag-filter {
+    background: var(--color-canvas);
+    color: var(--color-body);
+    border: 1px solid var(--color-hairline);
+  }
+  .tag-filter.is-active {
+    background: var(--color-ink);
+    color: white;
+    border-color: var(--color-ink);
+  }
+  [data-module-tag] {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 280px;
+  }
 </style>
 
 <script>
@@ -371,15 +385,10 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
   document.querySelectorAll('.tag-filter').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tag-filter').forEach((b) => {
-        const isAll = b.dataset.tag === 'all';
-        b.style.background = isAll ? 'var(--color-ink)' : 'var(--color-canvas)';
-        b.style.color = isAll ? 'white' : 'var(--color-body)';
-        b.style.border = isAll ? 'none' : '1px solid var(--color-hairline)';
-        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        const active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
-      btn.style.background = 'var(--color-ink)';
-      btn.style.color = 'white';
-      btn.style.border = 'none';
       currentTag = btn.dataset.tag;
       currentPage = 0;
       updatePagination();
@@ -397,4 +406,14 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal-item').forEach((el) => observer.observe(el));
+
+  const gradientBtns = document.querySelectorAll('.btn-gradient');
+  if (gradientBtns.length) {
+    const gradientObserver = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        e.target.classList.toggle('is-offscreen', !e.isIntersecting);
+      });
+    }, { rootMargin: '50px' });
+    gradientBtns.forEach((el) => gradientObserver.observe(el));
+  }
 </script>
