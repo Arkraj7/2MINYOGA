@@ -1,58 +1,86 @@
 ---
+const STORAGE_KEY = 'yiaa-cookie-consent-v1';
 ---
 
 <div
   id="cookie-consent"
-  class="fixed bottom-4 left-4 right-4 z-50 mx-auto hidden max-w-[640px] rounded-lg border p-4 text-sm leading-relaxed"
-  style="background: var(--color-canvas); border-color: var(--color-hairline); box-shadow: 0 10px 30px rgba(0,0,0,0.12); color: var(--color-body);"
+  class="fixed inset-x-0 bottom-0 z-50 hidden border-t"
+  style="background: var(--color-canvas); border-color: var(--color-hairline); box-shadow: 0 -4px 20px rgba(0,0,0,0.06);"
   role="region"
-  aria-label="Cookie consent notice"
+  aria-label="Cookie consent"
+  aria-live="polite"
 >
-  <p class="mb-2 font-semibold" style="color: var(--color-ink);">Cookies & analytics</p>
-  <p class="mb-3">
-    This site uses Google Analytics cookies (only after you accept) and stores your theme preference.
-    See our <a href="/privacy" class="underline" style="color: var(--color-link);">privacy policy</a> for details.
-  </p>
-  <div class="flex flex-wrap gap-2">
-    <button
-      type="button"
-      id="cookie-accept"
-      class="cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
-      style="background: var(--color-ink);"
-    >Accept</button>
-    <button
-      type="button"
-      id="cookie-decline"
-      class="cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-opacity hover:opacity-60"
-      style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);"
-    >Decline</button>
+  <div class="mx-auto max-w-[1100px] px-6 py-4">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="flex-1">
+        <p class="text-sm font-semibold" style="color: var(--color-ink);">We respect your privacy</p>
+        <p class="mt-1 text-sm leading-relaxed" style="color: var(--color-body);">
+          We use a single first-party cookie to remember your theme preference and, only with your consent, Google Analytics to measure traffic. No data is sold. Read our
+          <a href="/privacy" class="font-medium underline underline-offset-2" style="color: var(--color-link);">privacy policy</a>.
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          data-cookie-action="decline"
+          class="cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70"
+          style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);"
+        >Decline</button>
+        <button
+          type="button"
+          data-cookie-action="accept"
+          class="cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          style="background: var(--color-ink);"
+        >Accept analytics</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<script is:inline>
+<noscript>
+  <div
+    role="region"
+    aria-label="Cookie notice"
+    class="fixed inset-x-0 bottom-0 z-50 border-t px-6 py-4"
+    style="background: var(--color-canvas); border-color: var(--color-hairline); color: var(--color-body);"
+  >
+    <p class="mx-auto max-w-[1100px] text-sm">
+      <strong style="color: var(--color-ink);">Cookies:</strong>
+      JavaScript is disabled, so no analytics cookies are set. Theme preference won't persist.
+      See our <a href="/privacy" style="color: var(--color-link);">privacy policy</a>.
+    </p>
+  </div>
+</noscript>
+
+<script is:inline define:vars={{ STORAGE_KEY }}>
   (function () {
-    try {
-      var stored = localStorage.getItem('cookie-consent');
-      var banner = document.getElementById('cookie-consent');
-      if (!banner) return;
-      if (stored === 'accepted' || stored === 'declined') return;
-      banner.classList.remove('hidden');
+    var banner = document.getElementById('cookie-consent');
+    if (!banner) return;
+    var stored = null;
+    try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (stored === 'accepted' || stored === 'declined') return;
 
-      function respond(choice) {
-        try { localStorage.setItem('cookie-consent', choice); } catch (e) {}
-        banner.classList.add('hidden');
-        if (choice === 'accepted' && typeof window.gtag === 'function') {
-          window.gtag('consent', 'update', {
-            ad_storage: 'granted',
-            ad_user_data: 'granted',
-            ad_personalization: 'granted',
-            analytics_storage: 'granted'
-          });
-        }
+    requestAnimationFrame(function () { banner.classList.remove('hidden'); });
+
+    function setConsent(choice) {
+      try { localStorage.setItem(STORAGE_KEY, choice); } catch (e) {}
+      banner.classList.add('hidden');
+      if (choice === 'accepted' && typeof window.gtag === 'function') {
+        window.gtag('consent', 'update', {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          analytics_storage: 'granted'
+        });
       }
+      document.dispatchEvent(new CustomEvent('cookie-consent:set', { detail: { choice: choice } }));
+    }
 
-      document.getElementById('cookie-accept')?.addEventListener('click', function () { respond('accepted'); });
-      document.getElementById('cookie-decline')?.addEventListener('click', function () { respond('declined'); });
-    } catch (e) {}
+    banner.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!(t instanceof Element)) return;
+      var action = t.getAttribute('data-cookie-action');
+      if (action === 'accept' || action === 'decline') setConsent(action);
+    });
   })();
 </script>
