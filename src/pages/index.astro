@@ -8,35 +8,92 @@ const modules = await getCollection('modules');
 const faqs = await getCollection('faqs');
 
 const sortedModules = modules.sort((a, b) => {
-  const order = ['desk-reset-neck-tension', 'heart-coherence-breathing', 'wrist-eye-relief', 'seated-spinal-twist', 'vagus-nerve-activation', 'standing-energy-reset', 'alternate-nostril-breathing', 'lower-back-hip-release'];
+  const order = ['post-driving-tension-release', 'airplane-seat-anxiety-soother', 'pre-commute-dread-defuser', 'public-transit-stand-center', 'post-travel-jet-lag-reset', 'pre-interview-confidence-boost', 'difficult-conversation-calmer', 'pre-exam-panic-button', 'public-speaking-throat-opener', 'performance-review-grounding', 'text-neck-relief-flow', 'screen-time-eye-strain-soother', 'late-night-scrolling-detox', 'zoom-fatigue-eraser', 'keyboard-warrior-wrist-reset', 'midday-overwhelm-sos', 'imposter-syndrome-shake-off', 'evening-transition-home-mode', 'bad-news-emotional-buffer', 'frustration-anger-diffuser', 'desk-reset-neck-tension', 'heart-coherence-breathing', 'wrist-eye-relief', 'seated-spinal-twist', 'vagus-nerve-activation', 'standing-energy-reset', 'alternate-nostril-breathing', 'lower-back-hip-release'];
   return order.indexOf(a.id) - order.indexOf(b.id);
 });
 
+const moduleImageMap = {
+  'alternate-nostril-breathing': 'deep-breathing-exercise-yoga',
+  'bad-news-emotional-buffer': 'deep-breathing-exercise-yoga',
+  'desk-reset-neck-tension': 'seated-neck-roll-stretch-yoga',
+  'difficult-conversation-calmer': 'resonance-heart-coherence-breathing-yoga',
+  'evening-transition-home-mode': 'standing-forward-fold-yoga',
+  'frustration-anger-diffuser': 'cobra-pose-yoga-backbend',
+  'heart-coherence-breathing': 'resonance-heart-coherence-breathing-yoga',
+  'imposter-syndrome-shake-off': 'mountain-pose-tadasana-yoga',
+  'keyboard-warrior-wrist-reset': 'seated-eagle-arms-yoga-pose',
+  'late-night-scrolling-detox': 'cobra-pose-yoga-backbend',
+  'lower-back-hip-release': 'seated-figure-4-stretch-yoga',
+  'midday-overwhelm-sos': 'childs-pose-yoga-stretch',
+  'performance-review-grounding': 'mountain-pose-tadasana-yoga',
+  'post-driving-tension-release': 'chair-pigeon-pose-stretch-yoga',
+  'post-travel-jet-lag-reset': 'legs-up-wall-viparita-karani-yoga',
+  'pre-commute-dread-defuser': 'deep-breathing-exercise-yoga',
+  'pre-exam-panic-button': 'deep-breathing-exercise-yoga',
+  'pre-interview-confidence-boost': 'mountain-pose-tadasana-yoga',
+  'public-speaking-throat-opener': 'cobra-pose-yoga-backbend',
+  'public-transit-stand-center': 'mountain-pose-tadasana-yoga',
+  'screen-time-eye-strain-soother': 'seated-eagle-arms-yoga-pose',
+  'seated-spinal-twist': 'seated-spinal-twist-yoga-pose',
+  'standing-energy-reset': 'standing-forward-fold-yoga',
+  'text-neck-relief-flow': 'desk-downward-dog-stretch-yoga',
+  'vagus-nerve-activation': 'cobra-pose-yoga-backbend',
+  'wrist-eye-relief': 'seated-eagle-arms-yoga-pose',
+  'zoom-fatigue-eraser': 'seated-eagle-arms-yoga-pose',
+  'airplane-seat-anxiety-soother': 'deep-breathing-exercise-yoga',
+};
+
 const sortedFaqs = faqs.sort((a, b) => {
-  const order = ['hrv-breathing-benefits', 'cortisol-reduction', 'desk-yoga-effectiveness', 'vagus-nerve-stimulation', 'best-time-practice', 'no-yoga-experience'];
+  const order = ['what-is-yoga', 'yoga-history', 'yoga-philosophy', 'yoga-beginners', 'yoga-for-kids', 'yoga-counts-exercise', 'yoga-aerobic-exercise', 'yoga-weight-loss', 'what-is-somatic-yoga', 'face-yoga-works', 'hrv-breathing-benefits', 'cortisol-reduction', 'desk-yoga-effectiveness', 'vagus-nerve-stimulation', 'best-time-practice', 'no-yoga-experience'];
   return order.indexOf(a.id) - order.indexOf(b.id);
 });
 
 const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
 ---
 
-<Layout title="Quick Yoga Stress Relief | 2-Minute Bite-Sized Routines" description="Need quick yoga stress relief? Discover 2-to-5-minute bite-sized yoga routines and quick stretches perfect for the office, school, or home. Start relaxing now." canonical="https://yogainamin.com/">
+<Layout title="Quick Yoga Workouts - Learn Yoga Online Free | 2-Minute Routines" description="Learn yoga online free with 2-minute quick yoga workouts and quick yoga routines for beginners, kids, and adults. Simple yoga exercises at home, quick yoga poses, instant yoga stress relief, plus yoga history, philosophy, meaning, and benefits." canonical="https://yogainamin.com/">
   <Header />
   <main>
-    <section class="relative overflow-hidden px-6 py-24 text-center md:py-32" style="background: var(--color-canvas);">
+    <section class="relative overflow-hidden px-6 pb-6 pt-10 text-center md:pb-8 md:pt-12" style="background: var(--color-canvas);">
       <div class="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style="background: linear-gradient(135deg, #007cf0, #00dfd8, #7928ca, #ff0080, #ff4d4d, #f9cb28);"></div>
       <div class="mx-auto max-w-[800px]">
         <span class="mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider" style="background: var(--color-canvas-soft); color: var(--color-body); font-family: var(--font-mono);">Bite-Sized Yoga for Stress Relief</span>
         <h1 class="text-4xl font-semibold leading-tight tracking-tight md:text-5xl" style="color: var(--color-ink); letter-spacing: -2.4px;">
-          Quick Yoga Stress Relief<br class="md:hidden" /> <span style="background: linear-gradient(135deg, #007cf0, #7928ca); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">in 5 Minutes or Less</span>
+          Learn Yoga Online Free<br class="md:hidden" /> <span style="background: linear-gradient(135deg, #007cf0, #7928ca); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">in 2-Minute Quick Workouts</span>
         </h1>
         <p class="mx-auto mt-4 max-w-[600px] text-lg leading-relaxed" style="color: var(--color-body);">
-          Science-backed 2-minute yoga and quick yoga stretches designed for busy professionals, college students, and anyone needing fast tension relief at their desk. No mat needed. No experience required.
+          Quick yoga workouts for beginners, kids, and adults. Simple yoga exercises at home with no mat needed. Discover the meaning, history, philosophy, and benefits of yoga in bite-sized, science-backed sessions.
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <a href="#practices" class="inline-flex cursor-pointer items-center rounded-full px-6 py-3 text-base font-medium text-white no-underline transition-opacity hover:opacity-90" style="background: var(--color-ink);">Explore Practices</a>
-          <a href="#faqs" class="inline-flex cursor-pointer items-center rounded-full border px-6 py-3 text-base font-medium no-underline transition-opacity hover:opacity-60" style="border-color: var(--color-hairline); color: var(--color-ink); background: var(--color-canvas);">Learn More</a>
+          <a href="#practices" class="btn-gradient"><strong class="btn-gradient__label">Explore Practices</strong><div class="btn-gradient__stars"><div class="btn-gradient__stars-inner"></div></div><div class="btn-gradient__glow"><div class="btn-gradient__circle"></div><div class="btn-gradient__circle"></div></div></a>
+          <a href="#faqs" class="btn-3d"><span class="btn-3d__top">Learn More</span></a>
         </div>
+        <img src="/HERO_YOGA.webp" alt="Yoga poses illustration" class="mx-auto mt-3 block h-auto w-full max-w-[220px]" />
+      </div>
+    </section>
+
+    <section id="learn" class="px-6 py-20" style="background: var(--color-canvas-soft);">
+      <div class="mx-auto max-w-[900px]">
+        <h2 class="mb-8 text-center text-3xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -1.28px;">What Is Yoga? Meaning, History, Philosophy & Benefits</h2>
+        <div class="grid gap-10 md:grid-cols-2">
+          <div>
+            <h3 class="mb-3 text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Yoga meaning</h3>
+            <p class="leading-relaxed" style="color: var(--color-body);">The word <em>yoga</em> comes from the Sanskrit root <em>yuj</em>, meaning &ldquo;to yoke&rdquo; or &ldquo;to unite.&rdquo; At its core, yoga is a 5,000-year-old mind-body practice that combines physical postures (<em>asana</em>), breath control (<em>pranayama</em>), and meditation to unite body, mind, and breath. Modern quick yoga workouts adapt these ancient techniques into simple yoga exercises at home that anyone can do in minutes.</p>
+          </div>
+          <div>
+            <h3 class="mb-3 text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Yoga history</h3>
+            <p class="leading-relaxed" style="color: var(--color-body);">Yoga originated in ancient India, with the earliest references in the <em>Rig Veda</em> (c. 1500 BCE). It evolved through the Vedic, Pre-Classical, Classical (Patanjali&rsquo;s <em>Yoga Sutras</em>, c. 400 CE), Post-Classical, and Modern periods &mdash; the last of which spread yoga online for beginners worldwide. Today you can learn yoga online free through guided routines, video, and structured programs.</p>
+          </div>
+          <div>
+            <h3 class="mb-3 text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Yoga philosophy</h3>
+            <p class="leading-relaxed" style="color: var(--color-body);">Patanjali&rsquo;s <em>Yoga Sutras</em> describe the Eight Limbs of Yoga &mdash; ethical restraints, observances, postures, breath, sense withdrawal, concentration, meditation, and absorption. Modern yoga philosophy distills these into three accessible ideas: move with awareness, breathe with intention, and rest with presence. These three pillars power every quick yoga routine for beginners on this site.</p>
+          </div>
+          <div>
+            <h3 class="mb-3 text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Yoga benefits</h3>
+            <p class="leading-relaxed" style="color: var(--color-body);">Research shows that even 2 minute yoga breaks can lower cortisol, improve heart-rate variability, and reduce perceived stress. Quick yoga for kids builds focus and body awareness; quick yoga poses for adults release neck, shoulder, and lower-back tension. Learn yoga for adults at home &mdash; no mat, no experience, no studio &mdash; and feel the difference in your first session.</p>
+          </div>
+        </div>
+        <p class="mt-10 text-center text-sm" style="color: var(--color-mute);">New to yoga? Start with our most popular practice: <a href="/module/desk-reset-neck-tension" class="font-medium" style="color: var(--color-link);">Desk &amp; Office Yoga</a> &middot; <a href="/module/heart-coherence-breathing" class="font-medium" style="color: var(--color-link);">Pre-Presentation Reset</a> &middot; <a href="/module/standing-energy-reset" class="font-medium" style="color: var(--color-link);">Morning Energy Boost</a></p>
       </div>
     </section>
 
@@ -47,19 +104,39 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
           <p class="mx-auto mt-3 max-w-[500px]" style="color: var(--color-body);">Each micro yoga session is 2–5 minutes, designed to fit seamlessly into your workday. Quick yoga stretches for instant calm and tension relief.</p>
         </div>
 
-        <div class="mb-8 flex flex-wrap items-center justify-center gap-2">
-          <button class="tag-filter active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag="all" style="background: var(--color-ink); color: white;">All</button>
-          {allTags.map((tag) => (
-            <button class="tag-filter rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag={tag} style="border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">{tag}</button>
-          ))}
+        <div class="mb-8 flex flex-col items-center gap-2">
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button class="tag-filter active rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag="all" aria-pressed="true" style="background: var(--color-ink); color: white;">All</button>
+            <div id="tag-container" class="flex flex-wrap items-center justify-center gap-2">
+              {allTags.map((tag) => (
+                <button class="tag-filter rounded-full px-4 py-1.5 text-sm font-medium transition-colors" data-tag={tag} aria-pressed="false" style="border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);">{tag}</button>
+              ))}
+            </div>
+          </div>
+          <button id="expand-tags" class="flex cursor-pointer items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors hover:opacity-70" style="border: 1px solid var(--color-hairline); color: var(--color-mute); background: var(--color-canvas);">
+            <span id="expand-tags-label">Show all</span>
+            <svg id="expand-tags-icon" class="h-3.5 w-3.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
         </div>
 
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {sortedModules.map((module) => {
+        <div id="module-grid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {sortedModules.map((module, i) => {
             const { data } = module;
-            const totalSeconds = parseInt(data.duration) * 60;
+            const pageIndex = Math.floor(i / 8);
             return (
-              <a href={`/module/${module.id}`} data-module-tag={data.tags.join(',')} class="group relative overflow-hidden rounded-lg border no-underline transition-all duration-200 hover:-translate-y-0.5" style="border-color: var(--color-hairline); background: var(--color-canvas); box-shadow: 0px 1px 1px rgba(0,0,0,0.03), 0px 2px 2px rgba(0,0,0,0.04);">
+              <a
+                href={`/module/${module.id}`}
+                data-module-tag={data.tags.join(',')}
+                data-page={pageIndex}
+                aria-label={`${data.title} - ${data.duration} ${data.difficulty} practice. ${data.seo.meta_description}`}
+                class="group relative overflow-hidden rounded-lg border no-underline transition-all duration-200 hover:-translate-y-0.5"
+                style="border-color: var(--color-hairline); background: var(--color-canvas); box-shadow: 0px 1px 1px rgba(0,0,0,0.03), 0px 2px 2px rgba(0,0,0,0.04);"
+              >
+                {moduleImageMap[module.id] && (
+                  <div class="aspect-[4/3] overflow-hidden bg-teal-50/60 dark:bg-teal-950/30">
+                    <img src={`/images/poses/${moduleImageMap[module.id]}.webp`} alt={data.title} class="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                  </div>
+                )}
                 <div class="p-5">
                   <div class="mb-3 flex items-center gap-2">
                     <span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium" style="background: var(--color-canvas-soft); color: var(--color-body);">{data.duration}</span>
@@ -77,22 +154,39 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
             );
           })}
         </div>
+
+        <div id="pagination-controls" class="mt-10 flex items-center justify-center gap-2"></div>
       </div>
     </section>
 
-    <section class="px-6 py-24" style="background: var(--color-canvas);">
-      <div class="mx-auto max-w-[800px]">
-        <h2 class="mb-8 text-2xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -0.96px;">How a 2-Minute Yoga Session Can Lower Stress</h2>
-        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Quick yoga stress relief works by activating your parasympathetic nervous system through gentle movement and focused breathing. These micro yoga sessions are designed to interrupt the stress cycle before it compounds. Research shows that even <strong>2 minute yoga</strong> breaks can reduce cortisol by up to 25%, making <strong>bite-sized yoga</strong> one of the most efficient <strong>yoga stress management</strong> tools available.</p>
+    <section id="how-it-works" class="px-6 py-24 text-center" style="background: var(--color-canvas);">
+      <div class="mx-auto max-w-[700px]">
+        <span class="mb-4 inline-block rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider" style="background: var(--color-canvas-soft); color: var(--color-body); font-family: var(--font-mono);">Science-Backed &amp; Desk-Friendly</span>
+        <h2 class="mb-16 text-3xl font-semibold tracking-tight" style="color: var(--color-ink); letter-spacing: -1.28px;">How a 2-Minute Yoga Session Can Lower Stress</h2>
 
-        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Why Bite-Sized Yoga Works Better for Busy Schedules</h3>
-        <p class="mb-4 leading-relaxed" style="color: var(--color-body);">Traditional yoga requires 60 minutes and a studio. <strong>Quick yoga workouts</strong> remove every barrier. You can practice <strong>office desk yoga</strong> in your chair, <strong>fast yoga routines</strong> between meetings, and <strong>quick tension relief</strong> stretches without changing clothes. Consistency beats duration every time.</p>
+        <div class="reveal-item flex flex-col items-center gap-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">1</span>
+          <h3 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Activates Your Nervous System</h3>
+          <p class="max-w-[580px] leading-relaxed" style="color: var(--color-body);">Quick yoga stress relief works by activating your parasympathetic nervous system through gentle movement and focused breathing. These micro yoga sessions are designed to interrupt the stress cycle before it compounds. Research shows that even <strong>2 minute yoga</strong> breaks can reduce cortisol by up to 25%, making <strong>bite-sized yoga</strong> one of the most efficient <strong>yoga stress management</strong> tools available.</p>
+        </div>
 
-        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Quick Yoga Stretches for the Office Desk</h3>
-        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Our <strong>office yoga stretches</strong> target the neck, shoulders, wrists, and lower back — the areas most affected by prolonged sitting. Each <strong>fast yoga routine</strong> is designed for your desk chair and requires no equipment. Perfect for <strong>corporate yoga breaks</strong> and <strong>home office yoga stretches</strong>.</p>
+        <div class="reveal-item mt-16 flex flex-col items-center gap-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">2</span>
+          <h3 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Fits Any Schedule, Anywhere</h3>
+          <p class="max-w-[580px] leading-relaxed" style="color: var(--color-body);">Traditional yoga requires 60 minutes and a studio. <strong>Quick yoga workouts</strong> remove every barrier. You can practice <strong>office desk yoga</strong> in your chair, <strong>fast yoga routines</strong> between meetings, and <strong>quick tension relief</strong> stretches without changing clothes. Consistency beats duration every time.</p>
+        </div>
 
-        <h3 class="mb-4 text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Meditation Yoga Stress Relief for College Students</h3>
-        <p class="mb-6 leading-relaxed" style="color: var(--color-body);">Exam stress and academic pressure demand <strong>rapid anxiety relief stretches</strong> that fit between classes. Our <strong>short yoga for beginners</strong> sequences include calming breathing techniques for <strong>nervous system reset yoga</strong> and <strong>meditation yoga stress relief</strong> — all under 5 minutes.</p>
+        <div class="reveal-item mt-16 flex flex-col items-center gap-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">3</span>
+          <h3 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Targets Desk Pain Points</h3>
+          <p class="max-w-[580px] leading-relaxed" style="color: var(--color-body);">Our <strong>office yoga stretches</strong> target the neck, shoulders, wrists, and lower back — the areas most affected by prolonged sitting. Each <strong>fast yoga routine</strong> is designed for your desk chair and requires no equipment. Perfect for <strong>corporate yoga breaks</strong> and <strong>home office yoga stretches</strong>.</p>
+        </div>
+
+        <div class="reveal-item mt-16 flex flex-col items-center gap-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">4</span>
+          <h3 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Built for Students, Too</h3>
+          <p class="max-w-[580px] leading-relaxed" style="color: var(--color-body);">Exam stress and academic pressure demand <strong>rapid anxiety relief stretches</strong> that fit between classes. Our <strong>short yoga for beginners</strong> sequences include calming breathing techniques for <strong>nervous system reset yoga</strong> and <strong>meditation yoga stress relief</strong> — all under 5 minutes.</p>
+        </div>
       </div>
     </section>
 
@@ -103,22 +197,61 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
           <p class="mx-auto mt-3 max-w-[500px]" style="color: var(--color-body);">Everything you need to know about bite-sized yoga, quick yoga stress relief, and micro yoga sessions.</p>
         </div>
 
-        <script type="application/ld+json">
-          {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-              {sortedFaqs.map((faq) => `{
+        <script type="application/ld+json" set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://yogainamin.com/#organization",
+              "name": "Yoga in a Min",
+              "alternateName": "Yoga in a Minute",
+              "url": "https://yogainamin.com",
+              "logo": "https://yogainamin.com/LOGO_YOGA.png",
+              "image": "https://yogainamin.com/og-image.png",
+              "description": "Learn yoga online free with 2-minute quick yoga routines for beginners, kids, and adults. Simple yoga exercises at home, quick yoga poses, instant yoga stress relief, plus yoga history, philosophy, and benefits.",
+              "keywords": "quick yoga workout, quick yoga routine for beginners, simple yoga exercises at home, quick yoga for kids, instant yoga, yoga meaning, yoga benefits, yoga history, yoga online for beginners, yoga philosophy, quick yoga poses, learn yoga online, learn yoga for beginners, learn yoga for adults, learn yoga at home, learn yoga online free"
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://yogainamin.com/#website",
+              "name": "Yoga in a Min",
+              "alternateName": "Yoga in a Minute",
+              "url": "https://yogainamin.com",
+              "image": "https://yogainamin.com/og-image.png",
+              "inLanguage": "en-US",
+              "publisher": { "@id": "https://yogainamin.com/#organization" },
+              "keywords": "quick yoga workout, quick yoga routine for beginners, simple yoga exercises at home, quick yoga for kids, instant yoga, yoga meaning, yoga benefits, yoga history, yoga online for beginners, yoga philosophy, quick yoga poses, learn yoga online, learn yoga for beginners, learn yoga for adults, learn yoga at home, learn yoga online free",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": "https://yogainamin.com/?q={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@type": "FAQPage",
+              "@id": "https://yogainamin.com/#faq",
+              "mainEntity": sortedFaqs.map((faq) => ({
                 "@type": "Question",
-                "name": ${JSON.stringify(faq.data.question)},
+                "name": faq.data.question,
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": ${JSON.stringify(faq.data.answer)}
-                }
-              }`).join(',\n              ')}
-            ]
-          }
-        </script>
+                  "text": faq.data.answer,
+                },
+              })),
+            },
+            {
+              "@type": "ImageObject",
+              "@id": "https://yogainamin.com/#og-image",
+              "url": "https://yogainamin.com/og-image.png",
+              "width": 1200,
+              "height": 630,
+              "caption": "Yoga in a Min - Quick yoga stress relief in 2 minutes"
+            }
+          ]
+        }, null, 2)}></script>
 
         <div class="flex flex-col gap-3">
           {sortedFaqs.map((faq) => (
@@ -140,21 +273,128 @@ const allTags = [...new Set(sortedModules.flatMap((m) => m.data.tags))];
   <Footer />
 </Layout>
 
+<style is:global>
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .reveal-item.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
 <script>
+  const PER_PAGE = 8;
+  let currentPage = 0;
+  let currentTag = 'all';
+  const cards = [...document.querySelectorAll('[data-module-tag]')];
+  const grid = document.getElementById('module-grid');
+  const controls = document.getElementById('pagination-controls');
+
+  /* Tag expand/collapse */
+  const tagContainer = document.getElementById('tag-container');
+  const expandBtn = document.getElementById('expand-tags');
+  const expandLabel = document.getElementById('expand-tags-label');
+  const expandIcon = document.getElementById('expand-tags-icon');
+  const tagBtns = [...tagContainer.querySelectorAll('.tag-filter')];
+  const MAX_VISIBLE_TAGS = 7;
+  let tagsExpanded = false;
+
+  if (tagBtns.length > MAX_VISIBLE_TAGS) {
+    tagBtns.forEach((btn, i) => {
+      if (i >= MAX_VISIBLE_TAGS) btn.style.display = 'none';
+    });
+    expandBtn.addEventListener('click', () => {
+      tagsExpanded = !tagsExpanded;
+      tagBtns.forEach((btn, i) => {
+        if (i >= MAX_VISIBLE_TAGS) btn.style.display = tagsExpanded ? '' : 'none';
+      });
+      expandLabel.textContent = tagsExpanded ? 'Show less' : 'Show all';
+      expandIcon.style.transform = tagsExpanded ? 'rotate(180deg)' : '';
+    });
+  } else {
+    expandBtn.style.display = 'none';
+  }
+
+  function getFilteredCards() {
+    if (currentTag === 'all') return cards;
+    return cards.filter((c) => c.dataset.moduleTag.split(',').includes(currentTag));
+  }
+
+  function updatePagination() {
+    const filtered = getFilteredCards();
+    const totalPages = Math.ceil(filtered.length / PER_PAGE);
+    if (currentPage >= totalPages) currentPage = 0;
+
+    cards.forEach((c) => (c.style.display = 'none'));
+    const start = currentPage * PER_PAGE;
+    const end = start + PER_PAGE;
+    filtered.slice(start, end).forEach((c) => (c.style.display = ''));
+
+    controls.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    const prev = document.createElement('button');
+    prev.textContent = '‹';
+    prev.className = 'pagination-btn rounded-full px-3 py-1 text-sm font-medium transition-colors';
+    prev.style.cssText = `border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);`;
+    prev.disabled = currentPage === 0;
+    prev.style.opacity = currentPage === 0 ? '0.4' : '1';
+    prev.addEventListener('click', () => { if (currentPage > 0) { currentPage--; updatePagination(); window.scrollTo({ top: grid.offsetTop - 80, behavior: 'smooth' }); } });
+    controls.appendChild(prev);
+
+    for (let i = 0; i < totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = String(i + 1);
+      btn.className = 'pagination-btn rounded-full px-3 py-1 text-sm font-medium transition-colors';
+      if (i === currentPage) {
+        btn.style.cssText = `background: var(--color-ink); color: white; border: none;`;
+      } else {
+        btn.style.cssText = `border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);`;
+      }
+      btn.addEventListener('click', () => { currentPage = i; updatePagination(); window.scrollTo({ top: grid.offsetTop - 80, behavior: 'smooth' }); });
+      controls.appendChild(btn);
+    }
+
+    const next = document.createElement('button');
+    next.textContent = '›';
+    next.className = 'pagination-btn rounded-full px-3 py-1 text-sm font-medium transition-colors';
+    next.style.cssText = `border: 1px solid var(--color-hairline); color: var(--color-body); background: var(--color-canvas);`;
+    next.disabled = currentPage >= totalPages - 1;
+    next.style.opacity = currentPage >= totalPages - 1 ? '0.4' : '1';
+    next.addEventListener('click', () => { if (currentPage < totalPages - 1) { currentPage++; updatePagination(); window.scrollTo({ top: grid.offsetTop - 80, behavior: 'smooth' }); } });
+    controls.appendChild(next);
+  }
+
   document.querySelectorAll('.tag-filter').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tag-filter').forEach((b) => {
-        b.style.background = b.dataset.tag === 'all' ? 'var(--color-ink)' : 'var(--color-canvas)';
-        b.style.color = b.dataset.tag === 'all' ? 'white' : 'var(--color-body)';
-        b.style.border = b.dataset.tag === 'all' ? 'none' : '1px solid var(--color-hairline)';
+        const isAll = b.dataset.tag === 'all';
+        b.style.background = isAll ? 'var(--color-ink)' : 'var(--color-canvas)';
+        b.style.color = isAll ? 'white' : 'var(--color-body)';
+        b.style.border = isAll ? 'none' : '1px solid var(--color-hairline)';
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
       });
       btn.style.background = 'var(--color-ink)';
       btn.style.color = 'white';
       btn.style.border = 'none';
-      const tag = btn.dataset.tag;
-      document.querySelectorAll('[data-module-tag]').forEach((card) => {
-        card.style.display = tag === 'all' || card.dataset.moduleTag.split(',').includes(tag) ? '' : 'none';
-      });
+      currentTag = btn.dataset.tag;
+      currentPage = 0;
+      updatePagination();
     });
   });
+
+  updatePagination();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal-item').forEach((el) => observer.observe(el));
 </script>
