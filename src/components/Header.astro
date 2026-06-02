@@ -9,6 +9,7 @@ const { showNav = true } = Astro.props;
 <header class="sticky top-0 z-50 border-b" style="border-color: var(--color-hairline); background: var(--color-canvas); height: 64px; padding: 0 24px;">
   <div class="mx-auto flex h-full max-w-[1400px] items-center justify-between">
     <a href="/" class="flex items-center gap-2 no-underline shrink-0">
+      <img src="/LOGO_YOGA.png" alt="Yoga in a Min" width="128" height="32" class="h-8 w-auto" />
       <span class="text-lg font-semibold tracking-tight" style="color: var(--color-ink);">Yoga in a Min</span>
     </a>
 
@@ -18,7 +19,7 @@ const { showNav = true } = Astro.props;
           <div class="group relative">
             <button class="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm no-underline transition-colors hover:bg-black/5 cursor-pointer" style="color: var(--color-body);">
               Routines by Situation
-              <svg class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <svg class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="absolute left-0 top-full mt-1 w-56 rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0" style="border-color: var(--color-hairline); background: var(--color-canvas); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
               <div class="p-2 flex flex-col gap-0.5">
@@ -33,7 +34,7 @@ const { showNav = true } = Astro.props;
           <div class="group relative">
             <button class="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm no-underline transition-colors hover:bg-black/5 cursor-pointer" style="color: var(--color-body);">
               Targeted Relief
-              <svg class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <svg class="h-3 w-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="absolute left-0 top-full mt-1 w-56 rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0" style="border-color: var(--color-hairline); background: var(--color-canvas); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
               <div class="p-2 flex flex-col gap-0.5">
@@ -49,32 +50,43 @@ const { showNav = true } = Astro.props;
       )
     }
 
+    <button id="mobile-header-search" type="button" class="flex md:hidden h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-black/5" style="color: var(--color-body);" aria-label="Search practices">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </button>
+
     <div class="flex items-center gap-2">
       {
         showNav && (
           <>
             <a href="/about" class="hidden md:inline rounded-full px-3 py-1.5 text-sm no-underline transition-colors hover:bg-black/5" style="color: var(--color-body);">About</a>
             <a href="/#faqs" class="hidden md:inline rounded-full px-3 py-1.5 text-sm no-underline transition-colors hover:bg-black/5" style="color: var(--color-body);">FAQ</a>
-            <a href="/#practices" class="hidden md:inline-flex items-center rounded-full px-4 py-1.5 text-sm font-medium text-white no-underline transition-opacity hover:opacity-90" style="background: var(--color-ink);">Need Calm Now?</a>
+            <a href="/#practices" class="btn-calm btn-calm--item hidden md:inline-flex"><span class="btn-calm__bg"><span class="btn-calm__bg-layers"><span class="btn-calm__bg-layer btn-calm__bg-layer-1 btn-calm__bg-layer--purple"></span><span class="btn-calm__bg-layer btn-calm__bg-layer-2 btn-calm__bg-layer--turquoise"></span><span class="btn-calm__bg-layer btn-calm__bg-layer-3 btn-calm__bg-layer--yellow"></span></span></span><span class="btn-calm__inner"><span class="btn-calm__inner-static">Need Calm Now?</span><span class="btn-calm__inner-hover">Begin Session</span></span></a>
             <button id="search-toggle" class="hidden md:flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-black/5" style="color: var(--color-body);" aria-label="Search">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </button>
           </>
         )
       }
       <button id="theme-toggle" class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border transition-colors" style="border-color: var(--color-hairline); color: var(--color-body); background: var(--color-canvas);" aria-label="Toggle dark mode">
-        <svg class="h-4 w-4 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-        <svg class="hidden h-4 w-4 dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg class="h-4 w-4 dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        <svg class="hidden h-4 w-4 dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
       </button>
-      <button id="menu-toggle" class="flex md:hidden h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-black/5" style="color: var(--color-body);" aria-label="Toggle menu">
-        <svg id="menu-icon-open" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <svg id="menu-icon-close" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <button id="menu-toggle" class="flex md:hidden h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-black/5" style="color: var(--color-body);" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="menu-icon-close" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
   </div>
 </header>
 
-<div id="mobile-menu" class="fixed inset-0 z-40 hidden" style="background: var(--color-canvas); padding-top: 64px;">
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 hidden"
+  style="background: var(--color-canvas); padding-top: 64px;"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Mobile navigation"
+>
   <nav class="flex flex-col gap-2 overflow-y-auto p-6">
     <div class="flex flex-col gap-1">
       <span class="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">Routines by Situation</span>
@@ -95,16 +107,88 @@ const { showNav = true } = Astro.props;
     <a href="/about" class="mobile-link rounded-md px-3 py-2 text-sm no-underline" style="color: var(--color-body);">About Us</a>
     <a href="/#faqs" class="mobile-link rounded-md px-3 py-2 text-sm no-underline" style="color: var(--color-body);">FAQ</a>
     <hr class="my-2 border-0" style="border-top: 1px solid var(--color-hairline);">
-    <a href="/#practices" class="mt-2 inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-medium text-white no-underline transition-opacity hover:opacity-90" style="background: var(--color-ink);">Need Calm Now?</a>
+    <button id="mobile-search-toggle" type="button" class="mt-2 flex w-full items-center gap-3 rounded-md border px-3 py-2.5 text-left text-sm transition-colors" style="border-color: var(--color-hairline); color: var(--color-mute); background: var(--color-canvas);" aria-label="Search practices">
+      <svg class="h-4 w-4 shrink-0" style="color: var(--color-mute);" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <span>Search practices...</span>
+    </button>
   </nav>
 </div>
 
+<div
+  id="search-modal"
+  class="fixed inset-0 z-50 hidden"
+  style="background: rgba(0,0,0,0.4);"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search practices"
+>
+  <div class="mx-auto mt-[15vh] max-w-[600px] rounded-lg border p-5" style="background: var(--color-canvas); border-color: var(--color-hairline); box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
+    <div class="flex items-center gap-3">
+      <svg class="h-5 w-5 shrink-0" style="color: var(--color-mute);" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input id="search-input" type="text" placeholder="Search practices..." autocomplete="off" aria-label="Search practices" class="w-full border-0 bg-transparent text-base outline-none" style="color: var(--color-ink);" />
+      <button id="search-close" class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-black/5" style="color: var(--color-body);" aria-label="Close search">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="search-results" class="mt-3 flex flex-col gap-1 max-h-[50vh] overflow-y-auto"></div>
+  </div>
+</div>
+
+<style>
+  #search-modal.show { display: block; }
+  #search-input::placeholder { color: var(--color-mute); }
+  .search-result { cursor: pointer; }
+  .search-result:hover { background: color-mix(in srgb, var(--color-ink) 5%, transparent); border-radius: 6px; }
+</style>
+
 <script>
+  // Focus trap utility: keep Tab cycling within a container while open
+  function trapFocus(container, returnFocusTo) {
+    function getFocusable() {
+      return Array.from(
+        container.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+    }
+    function handleKey(e) {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) { e.preventDefault(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    container.addEventListener('keydown', handleKey);
+    return {
+      release() {
+        container.removeEventListener('keydown', handleKey);
+        returnFocusTo?.focus();
+      },
+    };
+  }
+
+  let menuTrap = null;
+  let searchTrap = null;
+
   const toggle = document.getElementById('theme-toggle');
   toggle?.addEventListener('click', () => {
     const html = document.documentElement;
-    const isDark = html.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const current = html.getAttribute('data-theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isCurrentlyDark =
+      current === 'dark' || (current === null && systemDark);
+    const next = isCurrentlyDark ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    html.classList.toggle('dark', next === 'dark');
+    html.classList.toggle('light', next === 'light');
+    localStorage.setItem('theme', next);
   });
 
   const menuToggle = document.getElementById('menu-toggle');
@@ -112,24 +196,103 @@ const { showNav = true } = Astro.props;
   const menuIconOpen = document.getElementById('menu-icon-open');
   const menuIconClose = document.getElementById('menu-icon-close');
 
+  function openMenu() {
+    mobileMenu?.classList.remove('hidden');
+    menuIconOpen?.classList.add('hidden');
+    menuIconClose?.classList.remove('hidden');
+    menuToggle?.setAttribute('aria-expanded', 'true');
+    menuTrap = trapFocus(mobileMenu, menuToggle);
+    const firstLink = mobileMenu?.querySelector('a, button');
+    if (firstLink) setTimeout(() => firstLink.focus(), 50);
+  }
+
   function closeMenu() {
     mobileMenu?.classList.add('hidden');
     menuIconOpen?.classList.remove('hidden');
     menuIconClose?.classList.add('hidden');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    menuTrap?.release();
+    menuTrap = null;
   }
 
   menuToggle?.addEventListener('click', () => {
     const isOpen = !mobileMenu?.classList.contains('hidden');
-    if (isOpen) {
-      closeMenu();
-    } else {
-      mobileMenu?.classList.remove('hidden');
-      menuIconOpen?.classList.add('hidden');
-      menuIconClose?.classList.remove('hidden');
-    }
+    if (isOpen) closeMenu(); else openMenu();
   });
 
   document.querySelectorAll('.mobile-link').forEach((link) => {
     link.addEventListener('click', closeMenu);
   });
+
+  const searchToggle = document.getElementById('search-toggle');
+  const searchModal = document.getElementById('search-modal');
+  const searchInput = document.getElementById('search-input');
+  const searchClose = document.getElementById('search-close');
+  const searchResults = document.getElementById('search-results');
+  let moduleData = [];
+
+  function openSearch() {
+    searchModal.classList.add('show');
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    setTimeout(() => searchInput.focus(), 100);
+    searchTrap = trapFocus(searchModal, searchToggle);
+    if (moduleData.length === 0) {
+      fetch('/api/modules.json')
+        .then((r) => r.json())
+        .then((data) => { moduleData = data; })
+        .catch(() => {});
+    }
+  }
+
+  function closeSearch() {
+    searchModal.classList.remove('show');
+    searchTrap?.release();
+    searchTrap = null;
+  }
+
+  function renderResults(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) { searchResults.innerHTML = ''; return; }
+    const matches = moduleData.filter(
+      (m) =>
+        m.title.toLowerCase().includes(q) ||
+        m.seo.meta_description.toLowerCase().includes(q) ||
+        m.tags.some((t) => t.toLowerCase().includes(q))
+    ).slice(0, 10);
+    if (matches.length === 0) {
+      searchResults.innerHTML = '<p class="px-3 py-4 text-sm text-center" style="color: var(--color-mute);">No practices found</p>';
+      return;
+    }
+    searchResults.innerHTML = matches
+      .map(
+        (m) =>
+          `<a href="/module/${m.id}" class="search-result flex items-center gap-3 px-3 py-2.5 text-sm no-underline transition-colors" style="color: var(--color-body);" onclick="document.getElementById('search-modal').classList.remove('show')">
+            <span class="font-medium" style="color: var(--color-ink);">${m.title}</span>
+            <span class="ml-auto text-xs" style="color: var(--color-mute); font-family: var(--font-mono);">${m.duration}</span>
+          </a>`
+      )
+      .join('');
+  }
+
+  searchToggle?.addEventListener('click', openSearch);
+  const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+  mobileSearchToggle?.addEventListener('click', () => {
+    closeMenu();
+    openSearch();
+  });
+  const mobileHeaderSearch = document.getElementById('mobile-header-search');
+  mobileHeaderSearch?.addEventListener('click', openSearch);
+  searchClose?.addEventListener('click', closeSearch);
+  searchModal?.addEventListener('click', (e) => {
+    if (e.target === searchModal) closeSearch();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (searchTrap) closeSearch();
+      else if (menuTrap) closeMenu();
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  });
+  searchInput?.addEventListener('input', (e) => renderResults(e.target.value));
 </script>

@@ -4,6 +4,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Timer from '../../components/Timer.astro';
 import VoiceOver from '../../components/VoiceOver.astro';
+import Share from '../../components/Share.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -28,9 +29,7 @@ const sequence = body.split('## ').filter(Boolean).map((block) => {
   return { title, duration, instructions };
 }).filter((s) => !s.title.includes('Voice-Over Script'));
 
-const voiceOver = body.split('## Voice-Over Script')[1]?.trim() || '';
-
-function parseStepDuration(dur) {
+function parseStepDuration(dur: string): number {
   const minMatch = dur.match(/(\d+)\s*min/);
   const secMatch = dur.match(/(\d+)\s*sec/);
   if (minMatch) return parseInt(minMatch[1]) * 60;
@@ -42,6 +41,167 @@ const timerSteps = sequence.map((s) => ({
   title: s.title,
   durationSeconds: parseStepDuration(s.duration),
 }));
+
+const moduleImageMap: Record<string, string> = {
+  'airplane-seat-anxiety-soother': 'seated-yoga-stretches-movements',
+  'alternate-nostril-breathing': 'woman-practicing-voo-breath',
+  'bad-news-emotional-buffer': 'grounding-exercise-peaceful-pose',
+  'desk-reset-neck-tension': 'desk-downward-dog-stretch-yoga',
+  'difficult-conversation-calmer': 'resonance-heart-coherence-breathing-yoga',
+  'evening-transition-home-mode': 'relaxed-pose-checkered-background',
+  'frustration-anger-diffuser': 'therapeutic-shake-exercise',
+  'heart-coherence-breathing': 'resonance-heart-coherence-breathing-yoga',
+  'imposter-syndrome-shake-off': 'confident-stance-athletic-poise',
+  'keyboard-warrior-wrist-reset': 'wrist-exercises-stretches',
+  'late-night-scrolling-detox': 'legs-up-wall-viparita-karani-yoga',
+  'lower-back-hip-release': 'stretch-hip-circle-exercises',
+  'midday-overwhelm-sos': 'childs-pose-glowing-forehead',
+  'performance-review-grounding': 'tree-pose-preparation-yoga',
+  'post-driving-tension-release': 'seated-spinal-twist-yoga-pose',
+  'post-travel-jet-lag-reset': 'legs-up-wall-viparita-karani-yoga',
+  'pre-commute-dread-defuser': 'relaxed-woman-sukhasana-pose',
+  'pre-exam-panic-button': 'serene-sun-breath-yoga-pose',
+  'pre-interview-confidence-boost': 'confident-stance-athletic-poise',
+  'public-speaking-throat-opener': 'chest-shoulder-opener-stretch',
+  'public-transit-stand-center': 'standing-forward-fold-yoga',
+  'screen-time-eye-strain-soother': 'eye-palming-movement-exercises',
+  'seated-spinal-twist': 'seated-spinal-twist-yoga-pose',
+  'standing-energy-reset': 'mountain-pose-tadasana-yoga',
+  'text-neck-relief-flow': 'seated-neck-roll-stretch-yoga',
+  'vagus-nerve-activation': 'deep-breathing-exercise-yoga',
+  'wrist-eye-relief': 'wrist-flexion-extension',
+  'zoom-fatigue-eraser': 'desk-downward-dog-stretch-yoga',
+};
+
+const moduleImage = moduleImageMap[module.id] ?? null;
+
+const stepImageMap: Record<string, string> = {
+  // Breathing / pranayama
+  'Box Breathing': 'serene-sun-breath-yoga-pose',
+  'Box Breathing with Extended Exhale': 'serene-sun-breath-yoga-pose',
+  'Humming Breath (Bhramari Pranayama)': 'woman-practicing-voo-breath',
+  'Bee Breath (Bhramari Pranayama)': 'woman-practicing-voo-breath',
+  'Lion\u2019s Breath (Simhasana Pranayama)': 'woman-practicing-voo-breath',
+  'Lion\u2019s Breath': 'woman-practicing-voo-breath',
+  'Nadi Shodhana (Alternate Nostril Breathing)': 'woman-practicing-voo-breath',
+  'Kneeling with Voo Breath': 'woman-practicing-voo-breath',
+  'Heart Coherence Breathing': 'resonance-heart-coherence-breathing-yoga',
+  'Resonance Breathing': 'resonance-heart-coherence-breathing-yoga',
+  'Belly Breathing / Diaphragmatic Breath': 'deep-breathing-exercise-yoga',
+  'Seated Sun Breaths': 'serene-sun-breath-yoga-pose',
+  'Comfortable Seated Position': 'relaxed-woman-sukhasana-pose',
+  'Cold-Trigger Breath': 'cold-trigger-breath-check',
+
+  // Neck & shoulders
+  'Seated Cat-Cow': 'cat-cow-yoga-stretch',
+  'Seated Cat-Cow with Side Bend': 'cat-cow-yoga-stretch',
+  'Gentle Neck Rolls': 'seated-neck-roll-stretch-yoga',
+  'Gentle Neck Tilts with Resistance': 'seated-neck-roll-stretch-yoga',
+  'Eagle Arms': 'seated-eagle-arms-yoga-pose',
+  'Eagle Arms Shoulder Release': 'seated-eagle-arms-yoga-pose',
+  'Lateral Breathing / Side Stretch': 'lateral-stretch-breathing-focus',
+  'Shoulder Roll Set': 'shoulder-roll-demonstration',
+  'Chin Tucks': 'chin-tuck-exercise-profile',
+  'Thread the Needle': 'seated-yoga-stretches-movements',
+  'Chest Opener in Doorway': 'doorway-chest-stretch',
+  'Chest and Shoulder Opener': 'chest-shoulder-opener-stretch',
+
+  // Spine / hips
+  'Seated Spinal Twist': 'seated-spinal-twist-yoga-pose',
+  'Seated Spinal Twist (Right)': 'seated-spinal-twist-yoga-pose',
+  'Seated Spinal Twist (Left)': 'seated-spinal-twist-yoga-pose',
+  'Gentle Side Bend': 'gentle-side-bend-yoga-stretch',
+  'Supine Twist': 'supine-twist-side-bend-stretch',
+  'Standing Hip Sway with Side Bend': 'hip-sway-side-bend-stretch',
+  'Seated Hip Circles': 'stretch-hip-circle-exercises',
+  'Seated Figure-4 Stretch': 'seated-figure-4-stretch-yoga',
+  'Chair Pigeon / Seated Figure 4': 'chair-pigeon-pose-stretch-yoga',
+
+  // Standing / energy
+  'Mountain Pose (Tadasana) Foundation': 'mountain-pose-tadasana-yoga',
+  'Mountain Pose with Affirmation': 'mountain-pose-tadasana-yoga',
+  'Standing Power Pose': 'confident-stance-athletic-poise',
+  'Equal Standing / Rock and Roll': 'rock-and-roll-yoga-pose',
+  'Tree Pose (Prep Stage)': 'tree-pose-preparation-yoga',
+  'Standing Forward Fold': 'standing-forward-fold-yoga',
+  'Wide-Legged Forward Fold': 'standing-forward-fold-yoga',
+  'Standing Side Stretch & Hip Circles': 'side-bend-yoga-stretch',
+  'Calf Raises & Ankle Circles': 'calf-raises-ankle-circles-workout',
+
+  // Restorative
+  'Child\u2019s Pose with Extended Exhalation': 'childs-pose-glowing-forehead',
+  'Forehead Grounding': 'childs-pose-glowing-forehead',
+  'Extended Child\u2019s Pose': 'childs-pose-yoga-stretch',
+  'Legs-Up-The-Wall Pose': 'legs-up-wall-viparita-karani-yoga',
+  'Constructive Rest Pose': 'legs-up-wall-viparita-karani-yoga',
+
+  // Eye / wrist
+  'Palming': 'relaxation-palming-technique',
+  'Eye Palming & Movements': 'eye-palming-movement-exercises',
+  'Near-Far Focus Shift': 'eye-exercise-focus-shift',
+  'Gentle Eye Squeeze & Release': 'eye-squeeze-release-exercise',
+  'Wrist Circles & Stretches': 'wrist-exercises-stretches',
+  'Wrist Flexion & Extension': 'wrist-flexion-extension',
+  'Finger Stretch & Thumb Circles': 'hand-stretches-thumb-circles',
+
+  // Energy / somatic
+  'Therapeutic Shaking': 'therapeutic-shake-exercise',
+  'Jaw Release with Lion\u2019s Breath': 'woman-practicing-voo-breath',
+  'Grounding 5-4-3-2-1 Sensory Check': 'grounding-exercise-peaceful-pose',
+  'Symbolic Hand and Forearm Wash': 'hand-forearm-wash-demonstration',
+  'Earlobe and Temple Massage': 'self-massage-relaxation-focus',
+};
+
+function getStepImage(title: string): string | null {
+  return stepImageMap[title] ?? null;
+}
+
+const relatedModulesMap: Record<string, string[]> = {
+  'airplane-seat-anxiety-soother': ['alternate-nostril-breathing', 'heart-coherence-breathing', 'vagus-nerve-activation'],
+  'alternate-nostril-breathing': ['vagus-nerve-activation', 'heart-coherence-breathing', 'midday-overwhelm-sos'],
+  'bad-news-emotional-buffer': ['heart-coherence-breathing', 'difficult-conversation-calmer', 'imposter-syndrome-shake-off'],
+  'desk-reset-neck-tension': ['seated-spinal-twist', 'wrist-eye-relief', 'text-neck-relief-flow'],
+  'difficult-conversation-calmer': ['heart-coherence-breathing', 'bad-news-emotional-buffer', 'imposter-syndrome-shake-off'],
+  'evening-transition-home-mode': ['standing-energy-reset', 'heart-coherence-breathing', 'late-night-scrolling-detox'],
+  'frustration-anger-diffuser': ['heart-coherence-breathing', 'imposter-syndrome-shake-off', 'standing-energy-reset'],
+  'heart-coherence-breathing': ['alternate-nostril-breathing', 'vagus-nerve-activation', 'midday-overwhelm-sos'],
+  'imposter-syndrome-shake-off': ['standing-energy-reset', 'frustration-anger-diffuser', 'power-pose'],
+  'keyboard-warrior-wrist-reset': ['desk-reset-neck-tension', 'wrist-eye-relief', 'text-neck-relief-flow'],
+  'late-night-scrolling-detox': ['evening-transition-home-mode', 'heart-coherence-breathing', 'vagus-nerve-activation'],
+  'lower-back-hip-release': ['seated-spinal-twist', 'desk-reset-neck-tension', 'standing-energy-reset'],
+  'midday-overwhelm-sos': ['heart-coherence-breathing', 'alternate-nostril-breathing', 'standing-energy-reset'],
+  'performance-review-grounding': ['imposter-syndrome-shake-off', 'pre-interview-confidence-boost', 'difficult-conversation-calmer'],
+  'post-driving-tension-release': ['lower-back-hip-release', 'seated-spinal-twist', 'desk-reset-neck-tension'],
+  'post-travel-jet-lag-reset': ['standing-energy-reset', 'evening-transition-home-mode', 'lower-back-hip-release'],
+  'pre-commute-dread-defuser': ['midday-overwhelm-sos', 'standing-energy-reset', 'heart-coherence-breathing'],
+  'pre-exam-panic-button': ['pre-interview-confidence-boost', 'heart-coherence-breathing', 'alternate-nostril-breathing'],
+  'pre-interview-confidence-boost': ['performance-review-grounding', 'imposter-syndrome-shake-off', 'public-speaking-throat-opener'],
+  'public-speaking-throat-opener': ['pre-interview-confidence-boost', 'heart-coherence-breathing', 'vagus-nerve-activation'],
+  'public-transit-stand-center': ['standing-energy-reset', 'airplane-seat-anxiety-soother', 'midday-overwhelm-sos'],
+  'screen-time-eye-strain-soother': ['wrist-eye-relief', 'desk-reset-neck-tension', 'text-neck-relief-flow'],
+  'seated-spinal-twist': ['desk-reset-neck-tension', 'lower-back-hip-release', 'standing-energy-reset'],
+  'standing-energy-reset': ['desk-reset-neck-tension', 'midday-overwhelm-sos', 'seated-spinal-twist'],
+  'text-neck-relief-flow': ['desk-reset-neck-tension', 'wrist-eye-relief', 'lower-back-hip-release'],
+  'vagus-nerve-activation': ['alternate-nostril-breathing', 'heart-coherence-breathing', 'midday-overwhelm-sos'],
+  'wrist-eye-relief': ['screen-time-eye-strain-soother', 'desk-reset-neck-tension', 'keyboard-warrior-wrist-reset'],
+  'zoom-fatigue-eraser': ['desk-reset-neck-tension', 'standing-energy-reset', 'wrist-eye-relief'],
+};
+
+const allModules = await getCollection('modules');
+const moduleMap = new Map(allModules.map((m) => [m.id, m]));
+const relatedIds = relatedModulesMap[module.id] ?? [];
+const relatedModules = relatedIds
+  .map((id) => {
+    const m = moduleMap.get(id);
+    if (!m) return null;
+    return {
+      id: m.id,
+      title: m.data.title,
+      duration: m.data.duration,
+      image: moduleImageMap[m.id] ?? null,
+    };
+  })
+  .filter((m): m is NonNullable<typeof m> => m !== null);
 ---
 
 <Layout title={data.seo.meta_title} description={data.seo.meta_description} canonical={`https://yogainamin.com/module/${module.id}/`}>
@@ -49,10 +209,23 @@ const timerSteps = sequence.map((s) => ({
 
   <main class="px-6 py-12 md:py-20" style="background: var(--color-canvas-soft);">
     <div class="mx-auto max-w-[900px]">
-      <a href="/#practices" class="mb-6 inline-flex items-center gap-1 text-sm font-medium no-underline transition-colors hover:opacity-60" style="color: var(--color-body);">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        Back to Practices
-      </a>
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex flex-wrap items-center gap-1 text-sm" style="color: var(--color-body);">
+          <li>
+            <a href="/" class="no-underline transition-colors hover:opacity-60">Home</a>
+          </li>
+          <li aria-hidden="true">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </li>
+          <li>
+            <a href="/#practices" class="no-underline transition-colors hover:opacity-60">Practices</a>
+          </li>
+          <li aria-hidden="true">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </li>
+          <li aria-current="page" class="truncate font-medium" style="color: var(--color-ink);">{data.title}</li>
+        </ol>
+      </nav>
 
       <div class="mb-4 flex items-center gap-3">
         <span class="inline-block rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas); color: var(--color-body);">{data.duration}</span>
@@ -65,50 +238,96 @@ const timerSteps = sequence.map((s) => ({
       <h1 class="text-3xl font-semibold leading-tight tracking-tight md:text-4xl" style="color: var(--color-ink); letter-spacing: -1.28px;">{data.title}</h1>
       <p class="mt-3 text-lg leading-relaxed" style="color: var(--color-body);">{data.seo.meta_description}</p>
 
-      <div class="mt-8" style="max-width: 500px;">
-        <Timer totalSeconds={totalSeconds} moduleTitle={data.title} steps={timerSteps} />
+      <Share title={data.title} description={data.seo.meta_description} variant="hero" />
+
+      {moduleImage && (
+        <div class="mt-6 overflow-hidden rounded-xl bg-teal-50/60 dark:bg-teal-950/30">
+          <img src={`/images/poses/${moduleImage}.webp`} alt={data.title} width="384" height="384" decoding="async" class="mx-auto h-auto w-full max-w-sm object-contain" loading="eager" fetchpriority="high" />
+        </div>
+      )}
+
+      <div class="mt-8 flex flex-col gap-6 md:flex-row md:items-start">
+        <div class="w-full md:max-w-[500px]">
+          <Timer totalSeconds={totalSeconds} moduleTitle={data.title} steps={timerSteps} />
+        </div>
+        <div class="w-full md:w-80 shrink-0">
+          <VoiceOver steps={sequence} moduleTitle={data.title} />
+        </div>
       </div>
 
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          "name": data.title,
-          "description": data.seo.meta_description,
-          "totalTime": `PT${parseInt(data.duration)}M`,
-          "step": sequence.map((step, i) => ({
-            "@type": "HowToStep",
-            "position": i + 1,
-            "name": step.title,
-            "text": step.instructions,
-            "duration": step.duration.includes('min') ? `PT${step.duration.match(/\d+/)?.[0] || 1}M` : `PT${step.duration.match(/\d+/)?.[0] || 30}S`,
-            "image": `https://yogainamin.com/og-${module.id}.png`
-          }))
-        }, null, 2)}
-      </script>
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "BreadcrumbList",
+            "@id": `https://yogainamin.com/module/${module.id}/#breadcrumb`,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://yogainamin.com/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Practices",
+                "item": "https://yogainamin.com/#practices"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": data.title,
+                "item": `https://yogainamin.com/module/${module.id}/`
+              }
+            ]
+          },
+          {
+            "@type": "HowTo",
+            "@id": `https://yogainamin.com/module/${module.id}/#howto`,
+            "name": data.title,
+            "description": data.seo.meta_description,
+            ...(moduleImage && { "image": `https://yogainamin.com/images/poses/${moduleImage}.webp` }),
+            "totalTime": `PT${parseInt(data.duration)}M`,
+            "step": sequence.map((step, i) => {
+              const stepImg = getStepImage(step.title);
+              return {
+                "@type": "HowToStep",
+                "position": i + 1,
+                "name": step.title,
+                "text": step.instructions,
+                "duration": step.duration.includes('min') ? `PT${step.duration.match(/\d+/)?.[0] || 1}M` : `PT${step.duration.match(/\d+/)?.[0] || 30}S`,
+                ...(stepImg && { "image": `https://yogainamin.com/images/poses/${stepImg}.webp` })
+              };
+            })
+          }
+        ]
+      }, null, 2)}></script>
 
       <div class="mt-12">
         <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Sequence — Quick Yoga Stretches Step by Step</h2>
         <div class="mt-4 flex flex-col gap-4">
-          {sequence.map((step, i) => (
+          {sequence.map((step, i) => {
+            const img = getStepImage(step.title);
+            return (
             <div class="rounded-lg border p-5" data-step-index={i} style="border-color: var(--color-hairline); background: var(--color-canvas);">
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex items-center gap-3">
-                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">{i + 1}</span>
-                  <div>
-                    <h3 class="text-base font-semibold" style="color: var(--color-ink);">{step.title}</h3>
-                    <span class="text-sm font-medium" style="color: var(--color-mute); font-family: var(--font-mono);">{step.duration}</span>
-                  </div>
+              <div class="flex items-center gap-3">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold" style="background: var(--color-ink); color: white;">{i + 1}</span>
+                <div class="flex-1">
+                  <h3 class="text-base font-semibold" style="color: var(--color-ink);">{step.title}</h3>
+                  <span class="text-sm font-medium" style="color: var(--color-mute); font-family: var(--font-mono);">{step.duration}</span>
                 </div>
               </div>
+              {img && (
+                <div class="mt-3 overflow-hidden rounded-lg bg-teal-50/60 dark:bg-teal-950/30">
+                  <img src={`/images/poses/${img}.webp`} alt={step.title} width="320" height="320" decoding="async" class="mx-auto h-auto w-full max-w-xs object-contain" loading="lazy" />
+                </div>
+              )}
               <p class="mt-3 text-sm leading-relaxed" style="color: var(--color-body);">{step.instructions}</p>
             </div>
-          ))}
+            );
+          })}
         </div>
-      </div>
-
-      <div class="mt-10">
-        <VoiceOver script={voiceOver} moduleTitle={data.title} />
       </div>
 
       <div class="mt-10">
@@ -119,7 +338,7 @@ const timerSteps = sequence.map((s) => ({
             <ul class="flex flex-col gap-1.5">
               {data.benefits.physiological.map((b) => (
                 <li class="flex items-start gap-2 text-sm" style="color: var(--color-body);">
-                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-success);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-success);" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   {b}
                 </li>
               ))}
@@ -130,7 +349,7 @@ const timerSteps = sequence.map((s) => ({
             <ul class="flex flex-col gap-1.5">
               {data.benefits.mental.map((b) => (
                 <li class="flex items-start gap-2 text-sm" style="color: var(--color-body);">
-                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-violet);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  <svg class="mt-0.5 h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--color-violet);" aria-hidden="true" focusable="false"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                   {b}
                 </li>
               ))}
@@ -148,6 +367,58 @@ const timerSteps = sequence.map((s) => ({
           <span class="rounded-full px-3 py-1 text-xs font-medium" style="background: var(--color-canvas-soft-2); color: var(--color-mute); font-family: var(--font-mono);">{tag}</span>
         ))}
       </div>
+
+      <div class="mt-10 rounded-lg border p-5" style="border-color: var(--color-hairline); background: var(--color-canvas);">
+        <div class="mb-2 text-xs font-medium uppercase tracking-wider" style="color: var(--color-mute); font-family: var(--font-mono);">Research & References</div>
+        <p class="text-sm leading-relaxed" style="color: var(--color-body);">
+          The benefits of micro-yoga and breathwork are supported by peer-reviewed research and authoritative health institutions.
+        </p>
+        <ul class="mt-3 flex flex-col gap-2 text-sm" style="color: var(--color-body);">
+          <li>
+            <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3193654/" target="_blank" rel="noopener" class="text-[var(--color-link)] no-underline hover:underline">Yoga for stress and anxiety: a systematic review</a>
+            <span style="color: var(--color-mute);"> — NCBI / PubMed Central</span>
+          </li>
+          <li>
+            <a href="https://www.health.harvard.edu/mind-and-mood/relaxation-techniques-breath-control-helps-quell-erring-anxiety" target="_blank" rel="noopener" class="text-[var(--color-link)] no-underline hover:underline">Relaxation techniques: Breath control helps quell errant anxiety</a>
+            <span style="color: var(--color-mute);"> — Harvard Health</span>
+          </li>
+          <li>
+            <a href="https://www.health.harvard.edu/blog/vagus-nerve-stimulation-2018050114171" target="_blank" rel="noopener" class="text-[var(--color-link)] no-underline hover:underline">Vagus nerve stimulation: Understanding the basics</a>
+            <span style="color: var(--color-mute);"> — Harvard Health</span>
+          </li>
+          <li>
+            <a href="https://www.nccih.nih.gov/health/relaxation-techniques-for-health" target="_blank" rel="noopener" class="text-[var(--color-link)] no-underline hover:underline">Relaxation techniques for health</a>
+            <span style="color: var(--color-mute);"> — NIH / NCCIH</span>
+          </li>
+        </ul>
+        <p class="mt-3 text-sm">
+          <a href="/science" class="text-[var(--color-link)] no-underline hover:underline">Read the full science behind micro-yoga →</a>
+        </p>
+      </div>
+
+      {relatedModules.length > 0 && (
+        <div class="mt-12">
+          <div class="flex items-baseline justify-between gap-4">
+            <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-ink);">Related Practices</h2>
+            <a href="/#practices" class="text-sm font-medium no-underline hover:opacity-60" style="color: var(--color-link);">View all →</a>
+          </div>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {relatedModules.map((rel) => (
+              <a href={`/module/${rel.id}/`} class="group block overflow-hidden rounded-lg border no-underline transition-all hover:border-[var(--color-hairline-strong)]" style="border-color: var(--color-hairline); background: var(--color-canvas);">
+                {rel.image && (
+                  <div class="overflow-hidden bg-teal-50/60 dark:bg-teal-950/30" style="aspect-ratio: 4/3;">
+                    <img src={`/images/poses/${rel.image}.webp`} alt={rel.title} width="400" height="300" decoding="async" class="h-full w-full object-contain p-2 transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                  </div>
+                )}
+                <div class="p-4">
+                  <h3 class="text-sm font-semibold leading-snug" style="color: var(--color-ink);">{rel.title}</h3>
+                  <span class="mt-1 inline-block text-xs font-medium" style="color: var(--color-mute); font-family: var(--font-mono);">{rel.duration}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   </main>
 
