@@ -58,21 +58,31 @@ const STORAGE_KEY = 'yiaa-cookie-consent-v1';
     if (!banner) return;
     var stored = null;
     try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
-    if (stored === 'accepted' || stored === 'declined') return;
+
+    function grantConsent() {
+      if (typeof window.gtag !== 'function') return;
+      window.gtag('consent', 'update', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted'
+      });
+    }
+
+    if (stored === 'accepted') {
+      grantConsent();
+      return;
+    }
+    if (stored === 'declined') {
+      return;
+    }
 
     requestAnimationFrame(function () { banner.classList.remove('hidden'); });
 
     function setConsent(choice) {
       try { localStorage.setItem(STORAGE_KEY, choice); } catch (e) {}
       banner.classList.add('hidden');
-      if (choice === 'accepted' && typeof window.gtag === 'function') {
-        window.gtag('consent', 'update', {
-          ad_storage: 'granted',
-          ad_user_data: 'granted',
-          ad_personalization: 'granted',
-          analytics_storage: 'granted'
-        });
-      }
+      if (choice === 'accepted') grantConsent();
       document.dispatchEvent(new CustomEvent('cookie-consent:set', { detail: { choice: choice } }));
     }
 
